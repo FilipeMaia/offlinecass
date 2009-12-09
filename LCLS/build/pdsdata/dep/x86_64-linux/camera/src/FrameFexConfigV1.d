@@ -1,3 +1,3 @@
-/reg/neh/home/filipe/offlinecass/LCLS/build/pdsdata/obj/x86_64-linux/camera/src/FrameFexConfigV1.o /reg/neh/home/filipe/offlinecass/LCLS/build/pdsdata/dep/x86_64-linux/camera/src/FrameFexConfigV1.d: src/FrameFexConfigV1.cc \
-  /reg/neh/home/filipe/offlinecass/LCLS/pdsdata/camera/FrameFexConfigV1.hh \
-  /reg/neh/home/filipe/offlinecass/LCLS/pdsdata/camera/FrameCoord.hh
+/home/filipe/offlinecass/LCLS/pdsdata/../build/pdsdata/obj/x86_64-linux/camera/src/FrameFexConfigV1.o /home/filipe/offlinecass/LCLS/pdsdata/../build/pdsdata/dep/x86_64-linux/camera/src/FrameFexConfigV1.d: src/FrameFexConfigV1.cc \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/camera/FrameFexConfigV1.hh \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/camera/FrameCoord.hh

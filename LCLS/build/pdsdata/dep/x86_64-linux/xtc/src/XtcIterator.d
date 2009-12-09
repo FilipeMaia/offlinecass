@@ -1,7 +1,7 @@
-/reg/neh/home/barty/offlinecass/LCLS/build/pdsdata/obj/x86_64-linux/xtc/src/XtcIterator.o /reg/neh/home/barty/offlinecass/LCLS/build/pdsdata/dep/x86_64-linux/xtc/src/XtcIterator.d: src/XtcIterator.cc \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/XtcIterator.hh \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/Xtc.hh \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/TypeId.hh \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/Damage.hh \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/Src.hh \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/Level.hh
+/home/filipe/offlinecass/LCLS/pdsdata/../build/pdsdata/obj/x86_64-linux/xtc/src/XtcIterator.o /home/filipe/offlinecass/LCLS/pdsdata/../build/pdsdata/dep/x86_64-linux/xtc/src/XtcIterator.d: src/XtcIterator.cc \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/XtcIterator.hh \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/Xtc.hh \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/TypeId.hh \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/Damage.hh \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/Src.hh \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/Level.hh

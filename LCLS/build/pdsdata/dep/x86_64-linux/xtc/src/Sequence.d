@@ -1,5 +1,5 @@
-/reg/neh/home/barty/offlinecass/LCLS/build/pdsdata/obj/x86_64-linux/xtc/src/Sequence.o /reg/neh/home/barty/offlinecass/LCLS/build/pdsdata/dep/x86_64-linux/xtc/src/Sequence.d: src/Sequence.cc \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/Sequence.hh \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/ClockTime.hh \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/TimeStamp.hh \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/TransitionId.hh
+/home/filipe/offlinecass/LCLS/pdsdata/../build/pdsdata/obj/x86_64-linux/xtc/src/Sequence.o /home/filipe/offlinecass/LCLS/pdsdata/../build/pdsdata/dep/x86_64-linux/xtc/src/Sequence.d: src/Sequence.cc \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/Sequence.hh \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/ClockTime.hh \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/TimeStamp.hh \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/TransitionId.hh

@@ -1,4 +1,4 @@
-/reg/neh/home/barty/offlinecass/LCLS/build/pdsdata/obj/x86_64-linux/xtc/src/ProcInfo.o /reg/neh/home/barty/offlinecass/LCLS/build/pdsdata/dep/x86_64-linux/xtc/src/ProcInfo.d: src/ProcInfo.cc \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/ProcInfo.hh \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/Src.hh \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/Level.hh
+/home/filipe/offlinecass/LCLS/pdsdata/../build/pdsdata/obj/x86_64-linux/xtc/src/ProcInfo.o /home/filipe/offlinecass/LCLS/pdsdata/../build/pdsdata/dep/x86_64-linux/xtc/src/ProcInfo.d: src/ProcInfo.cc \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/ProcInfo.hh \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/Src.hh \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/Level.hh

@@ -1,6 +1,6 @@
-/reg/neh/home/barty/offlinecass/LCLS/build/pdsdata/obj/x86_64-linux/epics/src/EpicsXtcSettings.o /reg/neh/home/barty/offlinecass/LCLS/build/pdsdata/dep/x86_64-linux/epics/src/EpicsXtcSettings.d: src/EpicsXtcSettings.cc \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/epics/EpicsXtcSettings.hh \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/TypeId.hh \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/DetInfo.hh \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/Src.hh \
-  /reg/neh/home/barty/offlinecass/LCLS/pdsdata/xtc/Level.hh
+/home/filipe/offlinecass/LCLS/pdsdata/../build/pdsdata/obj/x86_64-linux/epics/src/EpicsXtcSettings.o /home/filipe/offlinecass/LCLS/pdsdata/../build/pdsdata/dep/x86_64-linux/epics/src/EpicsXtcSettings.d: src/EpicsXtcSettings.cc \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/epics/EpicsXtcSettings.hh \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/TypeId.hh \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/DetInfo.hh \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/Src.hh \
+  /home/filipe/offlinecass/LCLS/pdsdata/../pdsdata/xtc/Level.hh

@@ -1,112 +1,0 @@
-8
-
-dir
-8
-https://www.mpi-hd.mpg.de/repos/lutz/offlinecass/trunk/LCLS/pdsdata
-https://www.mpi-hd.mpg.de/repos/lutz/offlinecass
-
-
-
-2009-11-30T18:19:31.566330Z
-2
-foucar
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-446c639c-ddd7-11de-9cbb-3f392ee97d8c
-
-pulnix
-dir
-
-app
-dir
-
-control
-dir
-
-packages.mk
-file
-
-
-
-
-2009-12-02T05:47:00.000000Z
-af8a27a7847afd97bf5268f318d28532
-2009-11-30T18:19:31.566330Z
-2
-foucar
-
-opal1k
-dir
-
-pnCCD
-dir
-
-camera
-dir
-
-acqiris
-dir
-
-evr
-dir
-
-xtc
-dir
-
-bld
-dir
-
-History
-file
-
-
-
-
-2009-12-02T05:47:00.000000Z
-96642c75c3b369b16c0a46629e0bac5f
-2009-11-30T18:19:31.566330Z
-2
-foucar
-
-flags.mk
-file
-
-
-
-
-2009-12-02T05:47:00.000000Z
-86a5f028a481909f5063ce0d015e4c6a
-2009-11-30T18:19:31.566330Z
-2
-foucar
-
-epics
-dir
-
-types
-dir
-
-Makefile
-file
-
-
-
-
-2009-12-02T05:47:00.000000Z
-3bb6f3c4502d34b4c245773a9196e185
-2009-11-30T18:19:31.566330Z
-2
-foucar
-
