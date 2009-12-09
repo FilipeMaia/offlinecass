@@ -21,7 +21,7 @@ HEADERS += ../cass/analysis_backend.h \
            cass_machine.h \
            ./classes/event/machine_event.h \
 
-INCLUDEPATH += $$(LCLSSYSINCLUDE) \
+INCLUDEPATH += ../LCLS \
                ../cass \
                ./classes/event \
 
