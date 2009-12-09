@@ -61,7 +61,7 @@ LIBS += -L../cass_remi -lcass_remi \
         -L../cass_vmi -lcass_vmi \
         -L../cass_machinedata -lcass_machinedata \
         -L../../../barty/hdf5/lib -lhdf5 \
-        -L$$(LCLSSYSLIB) -lacqdata -lxtcdata -lpulnixdata -lcamdata -lpnccddata \
+        -lacqdata -lxtcdata -lpulnixdata -lcamdata -lpnccddata \
 
 TARGETDEPS +=   ../cass_remi/libcass_remi.a \
                 ../cass_pnccd/libcass_pnccd.a \
