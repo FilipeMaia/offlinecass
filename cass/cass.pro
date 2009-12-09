@@ -34,7 +34,7 @@ HEADERS +=  analysis_backend.h \
             post_processor.h
 
 INCLUDEPATH +=  ./ \
-                $$(LCLSSYSINCLUDE) \
+                ../LCLS \
                 ../cass_remi \
                 ../cass_remi/classes/event \
                 ../cass_remi/classes/event/channel \
