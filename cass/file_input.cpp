@@ -67,6 +67,7 @@ void cass::FileInput::run()
         Pds::Dgram& dg = *reinterpret_cast<Pds::Dgram*>(cassevent->datagrambuffer());
         xtcfile.read(cassevent->datagrambuffer(),sizeof(dg));
         xtcfile.read(dg.xtc.payload(), dg.xtc.sizeofPayload());
+	cassevent->setFilename(filelistiterator->c_str());
         //tell the buffer that we are done//
         _ringbuffer.doneFilling(cassevent);
       }

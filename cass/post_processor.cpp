@@ -18,6 +18,8 @@
 #include <time.h>
 #include <hdf5.h>
 #include <string.h>
+#include <math.h>
+#include <stdlib.h>
 
 
 /* 
@@ -288,9 +290,75 @@ void cass::PostProcessor::postProcess(cass::CASSEvent &cassevent)
 
 	int imageFilter;
 	//imageFilter = postProcess_filter(cassevent);
-
+	openOutputFiles(cassevent);
 	//if(imageFilter) 
-		postProcess_writeHDF5(cassevent);
+	integrateByQ(cassevent);
+	//		postProcess_writeHDF5(cassevent);
 
 	printf("\n");
+}
+
+void cass::PostProcessor::integrateByQ(cass::CASSEvent &cassevent)
+{
+  int nframes = cassevent.pnCCDEvent().detectors().size();
+  if (nframes == 0) {
+    printf("No pnCCD frames in this event:  skipping HDF5 write step...\n");
+    return;
+  }
+  printf("Processing %s\n",cassevent.filename());
+  for(int frame=0; frame<nframes; frame++) {
+    int rows = cassevent.pnCCDEvent().detectors()[frame].rows();
+    int columns = cassevent.pnCCDEvent().detectors()[frame].columns();
+    int16_t *data = &cassevent.pnCCDEvent().detectors()[frame].correctedFrame()[0];
+    int max_q = ceil(sqrt(rows/2.0*rows/2.0+columns/2.0*columns/2.0));
+    int nbins = max_q;
+    float * bins = new float[nbins];
+    float * bin_distance = new float[nbins];
+    int * bin_members = new int[nbins];
+
+    for(int i = 0;i<nbins;i++){
+      bin_members[i] = 0;
+      bins[i] = 0;
+      bin_distance[i] = (float)max_q*i/nbins;
+    }
+    int i = 0;
+    for(int x = 0;x<columns;x++){
+      for(int y = 0;y<rows;y++){
+	float rel_x = x-columns/2.0;
+	float rel_y = y-rows/2.0;
+	int bin = nbins*sqrt(rel_x*rel_x+rel_y*rel_y)/max_q;
+	bin_members[bin]++;
+	bins[bin] += data[i];
+	i++;
+      }
+    }
+    for(int i = 0;i<nbins;i++){
+      if(bin_members[i]){
+	bins[i] /= bin_members[i];
+      }
+    }    
+    appendIntegratedByQ(cassevent,bin_distance,bins,nbins,frame);
+  }
+}
+
+void cass::PostProcessor::appendIntegratedByQ(cass::CASSEvent &cassevent,float * x, float * y,int n, int frame){
+  Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent.datagrambuffer());
+  time_t eventTime = datagram->seq.clock().seconds();
+  int32_t eventFiducial = datagram->seq.stamp().fiducials();
+  for(int i = 0;i<n;i++){
+    fprintf(integratedByQOutput,"%u,%d,%d,%f,%f\n",(unsigned int)eventTime,eventFiducial,frame,x[i],y[i]);
+  }  
+}
+
+void cass::PostProcessor::openOutputFiles(CASSEvent &cassevent){
+  char outfile[1024];
+  sprintf(outfile,"%s_I_by_Q.csv",cassevent.filename());
+  if(!currentXtcFile || strcmp(currentXtcFile,cassevent.filename())){
+    /* files are different. Open new file */
+    if(integratedByQOutput){
+      fclose(integratedByQOutput);
+    }
+    integratedByQOutput = fopen(outfile,"w");
+    currentXtcFile = cassevent.filename();    
+  }
 }

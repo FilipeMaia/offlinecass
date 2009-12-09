@@ -45,7 +45,7 @@ INCLUDEPATH += ./ \
                ../cass \
                ./classes/event \
                ./classes/event/pnccd_detector \
-               $$(LCLSSYSINCLUDE) \
+               ../LCLS \
                ./pnccd_lib
 
 

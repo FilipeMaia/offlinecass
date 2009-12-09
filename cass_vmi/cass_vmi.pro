@@ -24,7 +24,7 @@ HEADERS += ../cass/analysis_backend.h \
            cass_vmi.h \
            ./classes/event/vmi_event.h \
 
-INCLUDEPATH += $$(LCLSSYSINCLUDE) \
+INCLUDEPATH += ../LCLS \
                ../cass \
                ./classes/event \
 

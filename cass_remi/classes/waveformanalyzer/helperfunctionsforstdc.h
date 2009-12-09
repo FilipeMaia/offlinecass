@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <stdlib.h>
 
 #include "remi_event.h"
 #include "channel.h"

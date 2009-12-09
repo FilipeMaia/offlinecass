@@ -41,7 +41,7 @@ HEADERS += ../cass/analysis_backend.h \
            ./classes/detektorhitsorter/detektorhitsorter_quad.h \
            ./classes/detektorhitsorter/detektorhitsorter_simple.h \
 
-INCLUDEPATH += $$(LCLSSYSINCLUDE) \
+INCLUDEPATH += ../LCLS \
                ../cass \
                ./classes/waveformanalyzer \
                ./classes/detektorhitsorter \

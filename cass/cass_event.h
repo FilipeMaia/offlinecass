@@ -35,6 +35,8 @@ namespace cass
         
     public:
       char                            *datagrambuffer()     {return _datagrambuffer;} 
+      const char * filename(){return _filename;};
+      void setFilename(const char * f){_filename = f;}
 
     public:
       REMI::REMIEvent                 &REMIEvent()          {return *_remievent;}
@@ -49,6 +51,7 @@ namespace cass
       pnCCD::pnCCDEvent               *_pnccdevent;
       MachineData::MachineDataEvent   *_machinedataevent;
       char                             _datagrambuffer[0x1000000];
+      const char * _filename;
   };
 }
 
