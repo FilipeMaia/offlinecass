@@ -1,0 +1,52 @@
+8
+
+dir
+8
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass/trunk/cass_remi/classes/event/channel
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass
+
+
+
+2009-12-01T04:51:00.792986Z
+4
+foucar
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+446c639c-ddd7-11de-9cbb-3f392ee97d8c
+
+channel.cpp
+file
+
+
+
+
+2009-12-02T05:46:57.000000Z
+aa374702254ff556b1be74807917dd8a
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+channel.h
+file
+
+
+
+
+2009-12-02T05:46:57.000000Z
+e5647aa2102bd9e82029269f6cfb75e0
+2009-12-01T04:51:00.792986Z
+4
+foucar
+

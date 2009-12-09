@@ -1,0 +1,52 @@
+8
+
+dir
+8
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass/trunk/cass_machinedata/classes/event
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass
+
+
+
+2009-12-01T04:51:00.792986Z
+4
+foucar
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+446c639c-ddd7-11de-9cbb-3f392ee97d8c
+
+machine_event.cpp
+file
+
+
+
+
+2009-12-02T05:46:58.000000Z
+abfa8a4eb8b71d4a7035e27fdcf1147e
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+machine_event.h
+file
+
+
+
+
+2009-12-02T05:46:58.000000Z
+fdda07075bed2c2b34409cabe10295d8
+2009-12-01T04:51:00.792986Z
+4
+foucar
+

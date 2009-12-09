@@ -1,0 +1,52 @@
+8
+
+dir
+8
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass/trunk/LCLS/pdsdata/acqiris/src
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass
+
+
+
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+446c639c-ddd7-11de-9cbb-3f392ee97d8c
+
+ConfigV1.cc
+file
+
+
+
+
+2009-12-02T05:46:59.000000Z
+ee0fc0476360b806afa538cffed3684b
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+DataDescV1.cc
+file
+
+
+
+
+2009-12-02T05:46:59.000000Z
+64679a5a6ade8739f71db73499494740
+2009-11-30T18:19:31.566330Z
+2
+foucar
+

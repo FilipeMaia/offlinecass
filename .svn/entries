@@ -1,0 +1,130 @@
+8
+
+dir
+8
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass/trunk
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass
+
+
+
+2009-12-02T21:35:05.468089Z
+8
+ncoppola
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+446c639c-ddd7-11de-9cbb-3f392ee97d8c
+
+cass_pnccd
+dir
+
+License
+file
+
+
+
+
+2009-12-02T05:47:00.000000Z
+2de706550b2267070e3a54b30a4b723f
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+cass_vmi
+dir
+
+cass_remi
+dir
+
+AUTHORS
+file
+
+
+
+
+2009-12-02T05:47:00.000000Z
+b588e094d740cd09f055e6aeb42bde0d
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+INSTALL
+file
+
+
+
+
+2009-12-02T05:47:00.000000Z
+a285d67c17936e6692209c317ab0616a
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+cass_machinedata
+dir
+
+cass.pro
+file
+
+
+
+
+2009-12-03T03:01:31.000000Z
+b4a649e6143d94bee65a04937b82e4ab
+2009-12-02T21:35:05.468089Z
+8
+ncoppola
+
+cass
+dir
+
+README.devel
+file
+
+
+
+
+2009-12-02T05:47:00.000000Z
+78cefe67db161c4745493d6955ea9147
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+License.GPLv3
+file
+
+
+
+
+2009-12-02T05:47:00.000000Z
+d32239bcb673463ab874e80d47fae504
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+LCLS
+dir
+
+README
+file
+
+
+
+
+2009-12-02T05:47:00.000000Z
+c4ebff0e5d4c06eb9b0e6d8e9119e718
+2009-11-30T18:19:31.566330Z
+2
+foucar
+

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/repos/lutz/offlinecass/!svn/ver/4/trunk/cass_remi
+END
+remi_analysis.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/remi_analysis.cpp
+END
+cass_remi.pro
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/cass_remi.pro
+END
+remi_converter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/remi_converter.cpp
+END
+remi_analysis.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/remi_analysis.h
+END
+remi_converter.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/remi_converter.h
+END
+cass_remi.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/cass_remi.h
+END

@@ -1,0 +1,52 @@
+8
+
+dir
+8
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass/trunk/cass_vmi/classes/event
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass
+
+
+
+2009-12-01T04:51:00.792986Z
+4
+foucar
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+446c639c-ddd7-11de-9cbb-3f392ee97d8c
+
+vmi_event.h
+file
+
+
+
+
+2009-12-02T05:46:57.000000Z
+0753f2fe2c0c67ced79bce8ee922ba58
+2009-12-01T04:51:00.792986Z
+4
+foucar
+
+vmi_event.cpp
+file
+
+
+
+
+2009-12-02T05:46:57.000000Z
+a0ee1855518913899329f5297d01344d
+2009-11-30T18:19:31.566330Z
+2
+foucar
+

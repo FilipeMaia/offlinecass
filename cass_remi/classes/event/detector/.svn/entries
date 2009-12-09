@@ -1,0 +1,52 @@
+8
+
+dir
+8
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass/trunk/cass_remi/classes/event/detector
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass
+
+
+
+2009-12-01T04:51:00.792986Z
+4
+foucar
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+446c639c-ddd7-11de-9cbb-3f392ee97d8c
+
+detector.h
+file
+
+
+
+
+2009-12-02T05:46:57.000000Z
+cd7ad26c77f4b219c938ab7cb1787f64
+2009-12-01T04:51:00.792986Z
+4
+foucar
+
+detector.cpp
+file
+
+
+
+
+2009-12-02T05:46:57.000000Z
+5752394ebf039b6d5a498769a4559202
+2009-11-30T18:19:31.566330Z
+2
+foucar
+

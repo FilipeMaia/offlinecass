@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/make/hw
+END
+Makefile.package.template
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/make/hw/Makefile.package.template
+END
+package.mk
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/make/hw/package.mk
+END
+constituents.mk.template
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/make/hw/constituents.mk.template
+END
+flags.mk
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/make/hw/flags.mk
+END
+optgen.py
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/make/hw/optgen.py
+END
+tclgen.py
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/make/hw/tclgen.py
+END
+flags.mk.template
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/make/hw/flags.mk.template
+END
+prjgen.py
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/make/hw/prjgen.py
+END

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/pnCCD
+END
+FrameV1.hh
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/pnCCD/FrameV1.hh
+END
+fformat.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/pnCCD/fformat.h
+END
+constituents.mk
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/pnCCD/constituents.mk
+END
+ConfigV1.hh
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/pnCCD/ConfigV1.hh
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/pnCCD/Makefile
+END
+format.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/pnCCD/format.h
+END

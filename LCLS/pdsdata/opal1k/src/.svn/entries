@@ -1,0 +1,40 @@
+8
+
+dir
+8
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass/trunk/LCLS/pdsdata/opal1k/src
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass
+
+
+
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+446c639c-ddd7-11de-9cbb-3f392ee97d8c
+
+ConfigV1.cc
+file
+
+
+
+
+2009-12-02T05:46:59.000000Z
+3a0960e31fc020f589f627cb4c3961ba
+2009-11-30T18:19:31.566330Z
+2
+foucar
+

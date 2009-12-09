@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc
+END
+Src.hh
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/Src.hh
+END
+Env.hh
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/Env.hh
+END
+DetInfo.hh
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/DetInfo.hh
+END
+Dgram.hh
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/Dgram.hh
+END
+Xtc.hh
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/Xtc.hh
+END
+TypeId.hh
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/TypeId.hh
+END
+TimeStamp.hh
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/TimeStamp.hh
+END
+TransitionId.hh
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/TransitionId.hh
+END
+Level.hh
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/Level.hh
+END
+XtcIterator.hh
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/XtcIterator.hh
+END
+XtcFileIterator.hh
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/XtcFileIterator.hh
+END
+Sequence.hh
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/Sequence.hh
+END
+ClockTime.hh
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/ClockTime.hh
+END
+constituents.mk
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/constituents.mk
+END
+Damage.hh
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/Damage.hh
+END
+ProcInfo.hh
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/ProcInfo.hh
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/Makefile
+END

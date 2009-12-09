@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/classes/detektorhitsorter
+END
+detektorhitsorter_simple.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/classes/detektorhitsorter/detektorhitsorter_simple.cpp
+END
+detektorhitsorter_quad.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/classes/detektorhitsorter/detektorhitsorter_quad.cpp
+END
+detektorhitsorter_simple.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/classes/detektorhitsorter/detektorhitsorter_simple.h
+END
+detektorhitsorter_quad.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/classes/detektorhitsorter/detektorhitsorter_quad.h
+END
+detektorhitsorter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/classes/detektorhitsorter/detektorhitsorter.cpp
+END
+detektorhitsorter.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/classes/detektorhitsorter/detektorhitsorter.h
+END

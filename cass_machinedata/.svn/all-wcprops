@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/repos/lutz/offlinecass/!svn/ver/4/trunk/cass_machinedata
+END
+machine_converter.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_machinedata/machine_converter.h
+END
+cass_machine.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_machinedata/cass_machine.h
+END
+cass_machinedata.pro
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_machinedata/cass_machinedata.pro
+END
+machine_analysis.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_machinedata/machine_analysis.cpp
+END
+machine_converter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_machinedata/machine_converter.cpp
+END
+machine_analysis.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_machinedata/machine_analysis.h
+END

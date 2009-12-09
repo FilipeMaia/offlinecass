@@ -1,0 +1,106 @@
+8
+
+dir
+8
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass/trunk/cass_pnccd
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass
+
+
+
+2009-12-02T03:42:32.910447Z
+6
+foucar
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+446c639c-ddd7-11de-9cbb-3f392ee97d8c
+
+cass_pnccd.pro
+file
+
+
+
+
+2009-12-02T05:46:57.000000Z
+80b56360e6d95a730cb0eb9bc91be1bf
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+pnccd_converter.cpp
+file
+
+
+
+
+2009-12-02T05:46:57.000000Z
+5266cf6054447c84983c15d457fabe09
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+pnccd_analysis.h
+file
+
+
+
+
+2009-12-02T05:46:57.000000Z
+155ca28594e993fc66349987ea7a78da
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+pnccd_converter.h
+file
+
+
+
+
+2009-12-02T05:46:57.000000Z
+2077f7ba6eae11d621851bc797b8b437
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+cass_pnccd.h
+file
+
+
+
+
+2009-12-02T05:46:57.000000Z
+574f89d9f7177c0f6913d9bb5cb2ca74
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+pnccd_analysis.cpp
+file
+
+
+
+
+2009-12-02T05:46:57.000000Z
+d70ea049e7778698540bfe2d21ba4907
+2009-12-01T04:51:00.792986Z
+4
+foucar
+
+classes
+dir
+
+pnccd_lib
+dir
+

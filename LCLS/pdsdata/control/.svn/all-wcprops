@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/control
+END
+PVControl.hh
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/control/PVControl.hh
+END
+constituents.mk
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/control/constituents.mk
+END
+ConfigV1.hh
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/control/ConfigV1.hh
+END
+PVMonitor.hh
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/control/PVMonitor.hh
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/control/Makefile
+END

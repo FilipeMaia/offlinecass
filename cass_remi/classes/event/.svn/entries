@@ -1,0 +1,61 @@
+8
+
+dir
+8
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass/trunk/cass_remi/classes/event
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass
+
+
+
+2009-12-01T04:51:00.792986Z
+4
+foucar
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+446c639c-ddd7-11de-9cbb-3f392ee97d8c
+
+peak
+dir
+
+remi_event.h
+file
+
+
+
+
+2009-12-02T05:46:57.000000Z
+499f23b75a042a8acb8b6d3a4cef6117
+2009-12-01T04:51:00.792986Z
+4
+foucar
+
+channel
+dir
+
+detector
+dir
+
+remi_event.cpp
+file
+
+
+
+
+2009-12-02T05:46:57.000000Z
+49537ffb92047410dd94c624c1e3962b
+2009-11-30T18:19:31.566330Z
+2
+foucar
+

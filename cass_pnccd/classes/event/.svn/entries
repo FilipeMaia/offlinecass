@@ -1,0 +1,55 @@
+8
+
+dir
+8
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass/trunk/cass_pnccd/classes/event
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass
+
+
+
+2009-12-02T03:42:32.910447Z
+6
+foucar
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+446c639c-ddd7-11de-9cbb-3f392ee97d8c
+
+pnccd_detector
+dir
+
+pnccd_event.cpp
+file
+
+
+
+
+2009-12-02T05:46:56.000000Z
+e2ca8c7b88f2e74a19700113e89e9762
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+pnccd_event.h
+file
+
+
+
+
+2009-12-02T05:46:56.000000Z
+34055740c1a5b487b1e2ca124a3e8465
+2009-12-01T04:51:00.792986Z
+4
+foucar
+

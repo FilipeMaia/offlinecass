@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/app
+END
+XtcMonitorClient.hh
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/app/XtcMonitorClient.hh
+END
+xtcmonserver.cc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/app/xtcmonserver.cc
+END
+xtcreader.cc
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/app/xtcreader.cc
+END
+xtcMonClientExample.cc
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/app/xtcMonClientExample.cc
+END
+constituents.mk
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/app/constituents.mk
+END
+XtcMonitorClient.cc
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/app/XtcMonitorClient.cc
+END
+xtcmonclient.cc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/app/xtcmonclient.cc
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/app/Makefile
+END

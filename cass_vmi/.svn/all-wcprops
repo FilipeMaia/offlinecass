@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/repos/lutz/offlinecass/!svn/ver/4/trunk/cass_vmi
+END
+vmi_analysis.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_vmi/vmi_analysis.cpp
+END
+cass_vmi.pro
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_vmi/cass_vmi.pro
+END
+vmi_converter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_vmi/vmi_converter.cpp
+END
+vmi_analysis.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_vmi/vmi_analysis.h
+END
+vmi_converter.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_vmi/vmi_converter.h
+END
+cass_vmi.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_vmi/cass_vmi.h
+END

@@ -1,0 +1,58 @@
+8
+
+dir
+8
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass/trunk/LCLS
+https://www.mpi-hd.mpg.de/repos/lutz/offlinecass
+
+
+
+2009-12-02T21:35:05.468089Z
+8
+ncoppola
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+446c639c-ddd7-11de-9cbb-3f392ee97d8c
+
+projects.mk
+file
+
+
+
+
+2009-12-02T05:47:00.000000Z
+7a2380b1890b878992931f30fbca7231
+2009-11-30T18:19:31.566330Z
+2
+foucar
+
+pdsdata
+dir
+
+make
+dir
+
+Makefile
+file
+
+
+
+
+2009-12-02T05:47:00.000000Z
+d61af0f83467d9dbd7f21cd87ad580db
+2009-11-30T18:19:31.566330Z
+2
+foucar
+

@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/src
+END
+TypeId.cc
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/src/TypeId.cc
+END
+ProcInfo.cc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/src/ProcInfo.cc
+END
+TimeStamp.cc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/src/TimeStamp.cc
+END
+Level.cc
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/src/Level.cc
+END
+Src.cc
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/src/Src.cc
+END
+TransitionId.cc
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/src/TransitionId.cc
+END
+DetInfo.cc
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/src/DetInfo.cc
+END
+Sequence.cc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/src/Sequence.cc
+END
+XtcFileIterator.cc
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/src/XtcFileIterator.cc
+END
+XtcIterator.cc
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/src/XtcIterator.cc
+END
+ClockTime.cc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/lutz/offlinecass/!svn/ver/2/trunk/LCLS/pdsdata/xtc/src/ClockTime.cc
+END

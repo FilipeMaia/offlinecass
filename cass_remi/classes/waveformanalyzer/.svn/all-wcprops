@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/classes/waveformanalyzer
+END
+com.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/classes/waveformanalyzer/com.cpp
+END
+waveform_analyzer.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/classes/waveformanalyzer/waveform_analyzer.h
+END
+cfd.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/classes/waveformanalyzer/cfd.h
+END
+helperfunctionsforstdc.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/classes/waveformanalyzer/helperfunctionsforstdc.h
+END
+com.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/classes/waveformanalyzer/com.h
+END
+cfd.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/classes/waveformanalyzer/cfd.cpp
+END
+helperfunctionsforstdc.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_remi/classes/waveformanalyzer/helperfunctionsforstdc.cpp
+END

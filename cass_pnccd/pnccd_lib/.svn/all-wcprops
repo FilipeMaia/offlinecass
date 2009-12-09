@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/repos/lutz/offlinecass/!svn/ver/6/trunk/cass_pnccd/pnccd_lib
+END
+xonline_data_types.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/xonline_data_types.h
+END
+pix_event_data.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/pix_event_data.h
+END
+pixel_rearrangement.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/pixel_rearrangement.h
+END
+fformat.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/fformat.h
+END
+dark_frame_caldata.C
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/dark_frame_caldata.C
+END
+dark_frame_caldata.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/dark_frame_caldata.h
+END
+badpix_map_edit.C
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/badpix_map_edit.C
+END
+xonline_constants.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/xonline_constants.h
+END
+badpix_map_edit.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/badpix_map_edit.h
+END
+pnccd_analysis_lib.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/pnccd_analysis_lib.cpp
+END
+frame_data.C
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/frame_data.C
+END
+pnccd_analysis_lib.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/lutz/offlinecass/!svn/ver/4/trunk/cass_pnccd/pnccd_lib/pnccd_analysis_lib.h
+END
+pixel_rearr_set.C
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/pixel_rearr_set.C
+END
+pef_definition.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/pef_definition.h
+END
+frame_data.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/frame_data.h
+END
+pix_event_data.C
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/lutz/offlinecass/!svn/ver/6/trunk/cass_pnccd/pnccd_lib/pix_event_data.C
+END
+pixel_rearrangement.C
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/pixel_rearrangement.C
+END
+pixel_rearr_set.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/lutz/offlinecass/!svn/ver/2/trunk/cass_pnccd/pnccd_lib/pixel_rearr_set.h
+END
