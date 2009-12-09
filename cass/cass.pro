@@ -55,7 +55,7 @@ INCLUDEPATH +=  ./ \
 
 
 unix{
-QMAKE_LFLAGS += -Wl,-rpath,$$(LCLSSYSLIB)
+QMAKE_LFLAGS += -Wl,-rpath,-L../LCLS/build/pdsdata/lib/x86_64-linux/
 LIBS += -L../cass_remi -lcass_remi \
         -L../cass_pnccd -lcass_pnccd \
         -L../cass_vmi -lcass_vmi \
