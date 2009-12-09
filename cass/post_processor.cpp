@@ -17,6 +17,7 @@
 #include "pdsdata/xtc/Dgram.hh"
 #include <time.h>
 #include <hdf5.h>
+#include <string.h>
 
 
 /* 

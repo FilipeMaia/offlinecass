@@ -1,5 +1,6 @@
 #include <sstream>
 #include <iostream>
+#include <string.h>
 
 #include "machine_converter.h"
 
