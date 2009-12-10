@@ -31,6 +31,7 @@ namespace cass
       FILE * integratedByQOutput;
       const char * currentXtcFile;
       void openOutputFiles(CASSEvent &cassevent);
+      void extractEnergy(CASSEvent &cassevent);
   };
 }
 
