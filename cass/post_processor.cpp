@@ -338,6 +338,7 @@ void cass::PostProcessor::integrateByQ(cass::CASSEvent &cassevent)
       }
     }    
     appendIntegratedByQ(cassevent,bin_distance,bins,nbins,frame);
+    extractEnergy(cassevent);
   }
 }
 
