@@ -350,6 +350,23 @@ void cass::PostProcessor::appendIntegratedByQ(cass::CASSEvent &cassevent,float *
   }  
 }
 
+void cass::PostProcessor::extractEnergy(cass::CASSEvent &cassevent){
+  int nframes = cassevent.pnCCDEvent().detectors().size();
+  FILE * fp = fopen(cassevent.filename(),"a");
+  Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent.datagrambuffer());
+  time_t eventTime = datagram->seq.clock().seconds();
+  int32_t eventFiducial = datagram->seq.stamp().fiducials();
+  for(int i=0; i<nframes; i++) {    
+    double f11 = cassevent.MachineDataEvent().f_11_ENRC();
+    double f12 = cassevent.MachineDataEvent().f_12_ENRC();
+    double f21 = cassevent.MachineDataEvent().f_21_ENRC();
+    double f22 = cassevent.MachineDataEvent().f_22_ENRC();
+    fprintf(fp,"%u %d %f %f %f %f\n",(unsigned int)eventTime,eventFiducial,f11,f12,f21,f22);
+  }
+  fclose(fp);
+}
+					      
+
 void cass::PostProcessor::openOutputFiles(CASSEvent &cassevent){
   char outfile[1024];
   sprintf(outfile,"%s_I_by_Q.csv",cassevent.filename());
