@@ -34,7 +34,7 @@ HEADERS +=  analysis_backend.h \
             post_processor.h
 
 INCLUDEPATH +=  ./ \
-                ../LCLS \
+                $$(LCLSSYSINCLUDE) \
                 ../cass_remi \
                 ../cass_remi/classes/event \
                 ../cass_remi/classes/event/channel \
@@ -55,13 +55,13 @@ INCLUDEPATH +=  ./ \
 
 
 unix{
-QMAKE_LFLAGS += -Wl,-rpath,-L../LCLS/build/pdsdata/lib/x86_64-linux/
+QMAKE_LFLAGS += -Wl,-rpath,$$(LCLSSYSLIB)
 LIBS += -L../cass_remi -lcass_remi \
         -L../cass_pnccd -lcass_pnccd \
         -L../cass_vmi -lcass_vmi \
         -L../cass_machinedata -lcass_machinedata \
         -L../../../barty/hdf5/lib -lhdf5 \
-        -lacqdata -lxtcdata -lpulnixdata -lcamdata -lpnccddata \
+        -L$$(LCLSSYSLIB) -lacqdata -lxtcdata -lpulnixdata -lcamdata -lpnccddata \
 
 TARGETDEPS +=   ../cass_remi/libcass_remi.a \
                 ../cass_pnccd/libcass_pnccd.a \
