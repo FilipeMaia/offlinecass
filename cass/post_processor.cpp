@@ -326,7 +326,12 @@ void cass::PostProcessor::postProcess(cass::CASSEvent &cassevent)
 
 bool cass::PostProcessor::isGoodImage(cass::CASSEvent &cassevent){
   bool good = true;
-  if(integrateImage(cassevent) < 0){
+  long long integral = integrateImage(cassevent);
+  if(integral < 0){
+    good = false;
+  }
+  double stdDev = stdDevImage(cassevent,integral);
+  if(stdDev < sqrt(1000)){
     good = false;
   }
   return good;
@@ -353,9 +358,48 @@ long long cass::PostProcessor::integrateImage(cass::CASSEvent &cassevent){
       ret += data[i];
     }
   }
+  if(ret){
+    printf("***** SIGNAL %lld for %s\n",ret,outfile);
+  }
   return ret;
 }
 
+
+double cass::PostProcessor::stdDevImage(cass::CASSEvent &cassevent,long long integral){
+  Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent.datagrambuffer());
+  time_t eventTime = datagram->seq.clock().seconds();
+  //		time_t eventTimeNs = datagram->seq.clock().nanoseconds();
+  int32_t eventFiducial = datagram->seq.stamp().fiducials();
+  struct tm *timeinfo=localtime( &eventTime );
+  char buffer[1024];
+  char outfile[1024];
+  strftime(buffer,80,"LCLS_%Y_%b%d_%H%M%S",timeinfo);
+  sprintf(outfile,"%s_%i_pnCCD.h5",buffer,eventFiducial);
+  
+  double ret = 0;
+  int nframes = cassevent.pnCCDEvent().detectors().size();
+  int totalSize = 0;
+  for(int frame=0; frame<nframes; frame++) {
+    int rows = cassevent.pnCCDEvent().detectors()[frame].rows();
+    int columns = cassevent.pnCCDEvent().detectors()[frame].columns();
+    totalSize += rows*columns;
+  }
+  double average = (double)integral/totalSize;
+  for(int frame=0; frame<nframes; frame++) {
+    int rows = cassevent.pnCCDEvent().detectors()[frame].rows();
+    int columns = cassevent.pnCCDEvent().detectors()[frame].columns();
+    int16_t *data = &cassevent.pnCCDEvent().detectors()[frame].correctedFrame()[0];
+    for(int i = 0;i<rows*columns;i++){
+      ret += (data[i]-average)*(data[i]-average);
+    }
+  }
+  ret /= totalSize;
+  ret = sqrt(ret);
+  if(ret){
+    printf("***** STDDEV %f for %s\n",ret,outfile);
+  }
+  return ret; 
+}
 
 void cass::PostProcessor::integrateByQ(cass::CASSEvent &cassevent)
 {

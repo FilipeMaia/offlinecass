@@ -31,6 +31,7 @@ namespace cass
       void openOutputFiles(CASSEvent &cassevent);
       void extractEnergy(CASSEvent &cassevent);
       long long integrateImage(cass::CASSEvent &cassevent);
+      double stdDevImage(cass::CASSEvent &cassevent,long long integral);
       bool isGoodImage(cass::CASSEvent &cassevent);
   };
 }
