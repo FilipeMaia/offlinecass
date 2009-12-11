@@ -30,6 +30,8 @@ namespace cass
       const char * currentXtcFile;
       void openOutputFiles(CASSEvent &cassevent);
       void extractEnergy(CASSEvent &cassevent);
+      long long integrateImage(cass::CASSEvent &cassevent);
+      bool isGoodImage(cass::CASSEvent &cassevent);
   };
 }
 

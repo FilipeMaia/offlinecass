@@ -71,7 +71,7 @@ void postProcess_printinfo(cass::CASSEvent &cassevent) {
  *	Filter events to determine whether it's worth saving
  *	(mostly blank for now - needs to be filled in)
  */
-int16_t postProcess_filter(cass::CASSEvent &cassevent) {
+int16_t postProcess_filter(cass::CASSEvent &) {
 
 	/*
 	 *	Filter according to time/date
@@ -112,7 +112,7 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
 		char buffer[1024];
 		Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent.datagrambuffer());
 		time_t eventTime = datagram->seq.clock().seconds();
-		time_t eventTimeNs = datagram->seq.clock().nanoseconds();
+		//		time_t eventTimeNs = datagram->seq.clock().nanoseconds();
 		int32_t eventFiducial = datagram->seq.stamp().fiducials();
 		struct tm *timeinfo=localtime( &eventTime );
 		strftime(buffer,80,"LCLS_%Y_%b%d_%H%M%S",timeinfo);
@@ -315,16 +315,47 @@ void cass::PostProcessor::postProcess(cass::CASSEvent &cassevent)
 {
 	postProcess_printinfo(cassevent);
 
-	int imageFilter;
-	//imageFilter = postProcess_filter(cassevent);
-	openOutputFiles(cassevent);
-	//if(imageFilter) 
-	integrateByQ(cassevent);
-	extractEnergy(cassevent);
-	postProcess_writeHDF5(cassevent);
-
+	if(isGoodImage(cassevent)){	  
+	  openOutputFiles(cassevent);
+	  //	  integrateByQ(cassevent);
+	  //	  extractEnergy(cassevent);
+	  postProcess_writeHDF5(cassevent);
+	}
 	printf("\n");
 }
+
+bool cass::PostProcessor::isGoodImage(cass::CASSEvent &cassevent){
+  bool good = true;
+  if(integrateImage(cassevent) < 0){
+    good = false;
+  }
+  return good;
+}
+
+long long cass::PostProcessor::integrateImage(cass::CASSEvent &cassevent){
+  Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent.datagrambuffer());
+  time_t eventTime = datagram->seq.clock().seconds();
+  //		time_t eventTimeNs = datagram->seq.clock().nanoseconds();
+  int32_t eventFiducial = datagram->seq.stamp().fiducials();
+  struct tm *timeinfo=localtime( &eventTime );
+  char buffer[1024];
+  char outfile[1024];
+  strftime(buffer,80,"LCLS_%Y_%b%d_%H%M%S",timeinfo);
+  sprintf(outfile,"%s_%i_pnCCD.h5",buffer,eventFiducial);
+
+  long long ret = 0;
+  int nframes = cassevent.pnCCDEvent().detectors().size();
+  for(int frame=0; frame<nframes; frame++) {
+    int rows = cassevent.pnCCDEvent().detectors()[frame].rows();
+    int columns = cassevent.pnCCDEvent().detectors()[frame].columns();
+    int16_t *data = &cassevent.pnCCDEvent().detectors()[frame].correctedFrame()[0];
+    for(int i = 0;i<rows*columns;i++){
+      ret += data[i];
+    }
+  }
+  return ret;
+}
+
 
 void cass::PostProcessor::integrateByQ(cass::CASSEvent &cassevent)
 {
@@ -338,7 +369,7 @@ void cass::PostProcessor::integrateByQ(cass::CASSEvent &cassevent)
     int rows = cassevent.pnCCDEvent().detectors()[frame].rows();
     int columns = cassevent.pnCCDEvent().detectors()[frame].columns();
     int16_t *data = &cassevent.pnCCDEvent().detectors()[frame].correctedFrame()[0];
-    int max_q = ceil(sqrt(rows/2.0*rows/2.0+columns/2.0*columns/2.0));
+    int max_q = (int)(ceil(sqrt(rows/2.0*rows/2.0+columns/2.0*columns/2.0)));
     int nbins = max_q;
     float * bins = new float[nbins];
     float * bin_distance = new float[nbins];
@@ -354,7 +385,7 @@ void cass::PostProcessor::integrateByQ(cass::CASSEvent &cassevent)
       for(int y = 0;y<rows;y++){
 	float rel_x = x-columns/2.0;
 	float rel_y = y-rows/2.0;
-	int bin = nbins*sqrt(rel_x*rel_x+rel_y*rel_y)/max_q;
+	int bin = (int)(nbins*sqrt(rel_x*rel_x+rel_y*rel_y)/max_q);
 	bin_members[bin]++;
 	bins[bin] += data[i];
 	i++;
@@ -383,7 +414,7 @@ void cass::PostProcessor::appendIntegratedByQ(cass::CASSEvent &cassevent,float *
 }
 
 void cass::PostProcessor::extractEnergy(cass::CASSEvent &cassevent){
-  int nframes = cassevent.pnCCDEvent().detectors().size();
+  //  int nframes = cassevent.pnCCDEvent().detectors().size();
   char outfile[1024];
   sprintf(outfile,"%s_energy.csv",QFileInfo(cassevent.filename()).baseName().toAscii().constData());
   //sprintf(outfile,"dummy_energy.csv");
