@@ -39,6 +39,8 @@ void cass::Worker::run()
 
       //here the usercode that will work on the cassevent will be called//
       if (shouldBeAnalyzed) _postprocessor->postProcess(*cassevent);
+      /* always post process */
+      //       _postprocessor->postProcess(*cassevent);
 
       //we are done, so tell the ringbuffer//
       _ringbuffer.doneProcessing(cassevent);

@@ -15,7 +15,6 @@ namespace cass
       	{
 	  printf("Post_processor creator called here\n");
 	  currentXtcFile = 0;
-	  integratedByQOutput = 0;
 	}
 		
 		~PostProcessor()  
@@ -28,7 +27,6 @@ namespace cass
       void integrateByQ(CASSEvent&);
   private:
       void appendIntegratedByQ(CASSEvent &cassevent,float * x, float * y,int n,int frame);
-      FILE * integratedByQOutput;
       const char * currentXtcFile;
       void openOutputFiles(CASSEvent &cassevent);
       void extractEnergy(CASSEvent &cassevent);
