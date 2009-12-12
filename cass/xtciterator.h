@@ -31,14 +31,21 @@ namespace cass
             {
                 iterate(xtc);
             }
-            else //otherwise check which format converter is responsible for this xtc//
-            {
-                for (std::map<FormatConverter::Converters,ConversionBackend*>::iterator it=_converters.begin() ; it != _converters.end(); ++it )
-                {
-                    if( it->second->handlesType(xtc->contains.id()))
-                        (*(it->second))(xtc,_cassevent);
-                }
-            }
+            else{ //otherwise check which format converter is responsible for this xtc//
+	      //check whether datagram is damaged//
+	      uint32_t damage = xtc->damage.value();
+	      if (!damage)
+		{
+		  for (std::map<FormatConverter::Converters,ConversionBackend*>::iterator it=_converters.begin() ; it != _converters.end(); ++it )
+		    {
+		      if( it->second->handlesType(xtc->contains.id()))
+			(*(it->second))(xtc,_cassevent);
+		    }
+		}
+	      else
+		std::cout <<std::hex<<Pds::TypeId::name(xtc->contains.id())<< " is damaged: 0x" <<xtc->damage.value()<<std::dec<<std::endl;
+	      
+	    }
             return Continue;
         }
     private:
