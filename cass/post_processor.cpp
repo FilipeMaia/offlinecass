@@ -330,9 +330,17 @@ bool cass::PostProcessor::isGoodImage(cass::CASSEvent &cassevent){
   if(integral < 0){
     good = false;
   }
+
   double stdDev = stdDevImage(cassevent,integral);
   if(stdDev < sqrt(1000)){
     good = false;
+  }
+  if(cass::globalOptions.outputHitsToFile && good){
+    Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent.datagrambuffer());
+    uint64_t bunchId = datagram->seq.clock().seconds();
+    bunchId = (bunchId<<32) + static_cast<uint32_t>(datagram->seq.stamp().fiducials()<<8);
+    FILE * fp = fopen(cass::globalOptions.hitsOutputFile.toAscii().constData(),"a");
+    fprintf(fp,"%llu\n",bunchId);
   }
   return good;
 }
