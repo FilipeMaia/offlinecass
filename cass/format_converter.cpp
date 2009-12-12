@@ -44,7 +44,7 @@ bool cass::FormatConverter::processDatagram(cass::CASSEvent *cassevent)
   
   //check whether datagram is damaged//
   uint32_t damage = datagram->xtc.damage.value();
-  if (!damage)
+  if (1 || !damage)
   {
     //if datagram is configuration or an event (L1Accept) then we will iterate through it//
     //otherwise we ignore the datagram//
