@@ -9,6 +9,10 @@
 #  define CASSSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
+namespace cass{
+const int RingBufferSize=4;
+}
+
 #endif
 
 

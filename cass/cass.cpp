@@ -24,7 +24,7 @@ int main(int argc, char **argv)
   const char *filelistname = "filesToProcess.txt";
 
   // a ringbuffer for the cassevents//
-  lmf::RingBuffer<cass::CASSEvent,4> ringbuffer;
+  lmf::RingBuffer<cass::CASSEvent,cass::RingBufferSize> ringbuffer;
   // create file input object //
   cass::FileInput *input(new cass::FileInput(filelistname,ringbuffer));
   // create a worker//

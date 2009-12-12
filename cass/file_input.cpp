@@ -9,7 +9,7 @@
 #include "pdsdata/xtc/Dgram.hh"
 #include "cass_event.h"
 
-cass::FileInput::FileInput(const char *filelistname,lmf::RingBuffer<cass::CASSEvent,4> &ringbuffer, QObject *parent)
+cass::FileInput::FileInput(const char *filelistname,lmf::RingBuffer<cass::CASSEvent,cass::RingBufferSize> &ringbuffer, QObject *parent)
        :QThread(parent),
         _ringbuffer(ringbuffer),
         _quit(false),

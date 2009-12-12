@@ -20,7 +20,7 @@ namespace cass
   {
     Q_OBJECT;
     public:
-      Worker(lmf::RingBuffer<cass::CASSEvent,4>&, QObject *parent=0);
+    Worker(lmf::RingBuffer<cass::CASSEvent,cass::RingBufferSize>&, QObject *parent=0);
       ~Worker();
 
       void run();
@@ -29,7 +29,7 @@ namespace cass
       void end();
 
     private:
-      lmf::RingBuffer<cass::CASSEvent,4>  &_ringbuffer;
+      lmf::RingBuffer<cass::CASSEvent,cass::RingBufferSize>  &_ringbuffer;
       Analyzer                            *_analyzer;
       FormatConverter                     *_converter;
       PostProcessor                       *_postprocessor;

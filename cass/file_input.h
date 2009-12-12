@@ -18,7 +18,7 @@ namespace cass
     Q_OBJECT;
   public:
     enum {_maxbufsize=1, _maxdatagramsize=0x1000000};
-    FileInput(const char *filelistname, lmf::RingBuffer<cass::CASSEvent,4>&,  QObject *parent=0);
+      FileInput(const char *filelistname, lmf::RingBuffer<cass::CASSEvent,cass::RingBufferSize>&,  QObject *parent=0);
     ~FileInput();
 
     void run();
@@ -27,7 +27,7 @@ namespace cass
     void end();
 
   private:
-    lmf::RingBuffer<cass::CASSEvent,4>  &_ringbuffer;
+      lmf::RingBuffer<cass::CASSEvent,cass::RingBufferSize>  &_ringbuffer;
     bool                                 _quit;
     const char                          *_filelistname;
   };

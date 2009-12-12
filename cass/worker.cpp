@@ -3,7 +3,7 @@
 #include "format_converter.h"
 #include "post_processor.h"
 
-cass::Worker::Worker(lmf::RingBuffer<cass::CASSEvent,4> &ringbuffer, QObject *parent)
+cass::Worker::Worker(lmf::RingBuffer<cass::CASSEvent,cass::RingBufferSize> &ringbuffer, QObject *parent)
   :QThread(parent),
     _ringbuffer(ringbuffer),
     _analyzer(new cass::Analyzer()),
