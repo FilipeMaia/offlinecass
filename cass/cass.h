@@ -28,6 +28,7 @@ public:
     QString hitsInputFile;
     bool justIntegrateImages;
     bool outputAllEvents;        
+    QString integratedImageOutput;
 };
 
 extern cass::CommandLineOptions globalOptions;

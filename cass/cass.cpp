@@ -25,11 +25,11 @@ void parseOptions(int argc, char ** argv){
     \n\
     -x: Hits output file\n\
     -l: Only analyze hits given on this file\n\
-    -s: Output one single integrated image\n\
+    -s: Output one single integrated image to this file\n\
     -a: Output all pnCCD events regardless of signal\n\
     -h: print this text\n\
 ";
-  static char optstring[] = "x:l:sah";
+  static char optstring[] = "x:l:s:ah";
   while(1){
     c = getopt(argc,argv,optstring);
     if(c == -1){
@@ -41,6 +41,7 @@ void parseOptions(int argc, char ** argv){
 	break;
     case 's':
 	cass::globalOptions.justIntegrateImages = true;
+	cass::globalOptions.integratedImageOutput = QString(optarg);
 	break;
     case 'x':
 	cass::globalOptions.outputHitsToFile = true;
