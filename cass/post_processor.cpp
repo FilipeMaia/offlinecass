@@ -315,7 +315,7 @@ void cass::PostProcessor::postProcess(cass::CASSEvent &cassevent)
 {
 	postProcess_printinfo(cassevent);
 
-	if(isGoodImage(cassevent)){	  
+	if(cass::globalOptions.outputAllEvents || isGoodImage(cassevent)){	  
 	  openOutputFiles(cassevent);
 	  //	  integrateByQ(cassevent);
 	  //	  extractEnergy(cassevent);

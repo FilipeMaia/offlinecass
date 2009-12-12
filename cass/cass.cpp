@@ -12,8 +12,53 @@
 #include "ratemeter.h"
 #include "dialog.h"
 #include "worker.h"
+#include <unistd.h>
 
+namespace cass{
+cass::CommandLineOptions globalOptions;
+}
 
+void parseOptions(int argc, char ** argv){
+  int c;
+  static char help_text[] = 
+    "    Options description:\n\
+    \n\
+    -x: Hits output file\n\
+    -l: Only analyze hits given on this file\n\
+    -s: Output one single integrated image\n\
+    -a: Output all pnCCD events regardless of signal\n\
+    -h: print this text\n\
+";
+  static char optstring[] = "x:l:sah";
+  while(1){
+    c = getopt(argc,argv,optstring);
+    if(c == -1){
+      break;
+    }
+    switch(c){
+    case 'a':
+	cass::globalOptions.outputAllEvents = true;
+	break;
+    case 's':
+	cass::globalOptions.justIntegrateImages = true;
+	break;
+    case 'x':
+	cass::globalOptions.outputHitsToFile = true;
+	cass::globalOptions.hitsOutputFile = QString(optarg);
+	break;
+    case 'l':
+	cass::globalOptions.onlyAnalyzeGivenHits = true;
+	cass::globalOptions.hitsInputFile = QString(optarg);
+      break;
+    case 'h':
+      printf("%s",help_text);
+      exit(0);
+      break;
+    default:
+      printf ("?? getopt returned character code 0%o ??\n", c);
+    }
+  }
+}
 
 int main(int argc, char **argv)
 {
@@ -22,6 +67,8 @@ int main(int argc, char **argv)
 
   //
   const char *filelistname = "filesToProcess.txt";
+
+  parseOptions(argc,argv);
 
   // a ringbuffer for the cassevents//
   lmf::RingBuffer<cass::CASSEvent,cass::RingBufferSize> ringbuffer;
