@@ -331,7 +331,7 @@ bool cass::PostProcessor::isGoodImage(cass::CASSEvent &cassevent){
     good = false;
   }
   double stdDev = stdDevImage(cassevent,integral);
-  if(stdDev < sqrt(30)){
+  if(stdDev < sqrt(1000)){
     good = false;
   }
   return good;
