@@ -310,6 +310,7 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   H5Gclose(gid);
   H5Fflush(hdf_fileID,H5F_SCOPE_LOCAL);
   H5Fclose(hdf_fileID); 
+  H5close();
 }
 
 
