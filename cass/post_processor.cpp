@@ -319,20 +319,40 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
  */
 void cass::PostProcessor::postProcess(cass::CASSEvent &cassevent)
 {
-	postProcess_printinfo(cassevent);
-
-	if(cass::globalOptions.outputAllEvents || isGoodImage(cassevent)){	  
-	  openOutputFiles(cassevent);
-	  //	  integrateByQ(cassevent);
-	  //	  extractEnergy(cassevent);
-	  if(cass::globalOptions.justIntegrateImages == false){
-	    postProcess_writeHDF5(cassevent);
-	  }
-	  if(cass::globalOptions.justIntegrateImages == true){
-	    addToIntegratedImage(cassevent);
-	  }
-	}
-	printf("\n");
+  Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent.datagrambuffer());
+  time_t eventTime = datagram->seq.clock().seconds();
+  if(cass::globalOptions.startTime.isValid()){
+    printf("Start Time %s\n",cass::globalOptions.startTime.toString().toAscii().constData());
+    printf("Event Time %s\n",QDateTime::fromTime_t(eventTime).toString().toAscii().constData());
+    printf("startTime valid\n");
+  }
+  if(cass::globalOptions.endTime.isValid()){
+    printf("%s\n",cass::globalOptions.endTime.toString().toAscii().constData());
+    printf("endTime valid\n");
+  }
+  if(cass::globalOptions.startTime.isValid() && 
+     QDateTime::fromTime_t(eventTime).time() < cass::globalOptions.startTime.time()){
+      printf("Skipping frame before startTime at postProcess\n");
+    return;
+  }
+  if(cass::globalOptions.endTime.isValid() && 
+     QDateTime::fromTime_t(eventTime).time() > cass::globalOptions.endTime.time()){
+    printf("Skipping frame after endTime at postProcess\n");
+    return;
+  }
+  postProcess_printinfo(cassevent);
+  
+  if(cass::globalOptions.outputAllEvents || isGoodImage(cassevent)){	  
+    //	  integrateByQ(cassevent);
+    //	  extractEnergy(cassevent);
+    if(cass::globalOptions.justIntegrateImages == false){
+      postProcess_writeHDF5(cassevent);
+    }
+    if(cass::globalOptions.justIntegrateImages == true){
+      addToIntegratedImage(cassevent);
+    }
+  }
+  printf("\n");
 }
 
 bool cass::PostProcessor::isGoodImage(cass::CASSEvent &cassevent){
@@ -370,11 +390,20 @@ long long cass::PostProcessor::integrateImage(cass::CASSEvent &cassevent){
   long long ret = 0;
   int nframes = cassevent.pnCCDEvent().detectors().size();
   for(int frame=0; frame<nframes; frame++) {
+    if(cass::globalOptions.discardCCD[frame]){
+      continue;
+    }
     int rows = cassevent.pnCCDEvent().detectors()[frame].rows();
     int columns = cassevent.pnCCDEvent().detectors()[frame].columns();
     int16_t *data = &cassevent.pnCCDEvent().detectors()[frame].correctedFrame()[0];
-    for(int i = 0;i<rows*columns;i++){
-      ret += data[i];
+    int i = 0;
+    for(int x = 0;x<columns;x++){
+      for(int y = 0;y<rows;y++){
+	if(cass::globalOptions.useSignalMask[frame] == false || 
+	   (cass::globalOptions.signalMask[frame].pixel(x,y) & 0xffffff) == 0)
+	ret += data[i];
+	i++;
+      }
     }
   }
   if(ret){
@@ -399,17 +428,38 @@ double cass::PostProcessor::stdDevImage(cass::CASSEvent &cassevent,long long int
   int nframes = cassevent.pnCCDEvent().detectors().size();
   int totalSize = 0;
   for(int frame=0; frame<nframes; frame++) {
+    if(cass::globalOptions.discardCCD[frame]){
+      continue;
+    }
     int rows = cassevent.pnCCDEvent().detectors()[frame].rows();
-    int columns = cassevent.pnCCDEvent().detectors()[frame].columns();
-    totalSize += rows*columns;
+    int columns = cassevent.pnCCDEvent().detectors()[frame].columns();    
+    for(int x = 0;x<columns;x++){
+      for(int y = 0;y<rows;y++){	
+	if(cass::globalOptions.useSignalMask[frame] == false || 
+	   (cass::globalOptions.signalMask[frame].pixel(x,y) & 0xffffff) == 0){
+	  totalSize++;
+	}
+      }
+    }
   }
   double average = (double)integral/totalSize;
   for(int frame=0; frame<nframes; frame++) {
+    if(cass::globalOptions.discardCCD[frame]){
+      continue;
+    }
     int rows = cassevent.pnCCDEvent().detectors()[frame].rows();
     int columns = cassevent.pnCCDEvent().detectors()[frame].columns();
     int16_t *data = &cassevent.pnCCDEvent().detectors()[frame].correctedFrame()[0];
-    for(int i = 0;i<rows*columns;i++){
-      ret += (data[i]-average)*(data[i]-average);
+    int i = 0;
+    for(int x = 0;x<columns;x++){
+      for(int y = 0;y<rows;y++){	
+	if(cass::globalOptions.useSignalMask[frame] == false || 
+	   cass::globalOptions.signalMask[frame].pixel(x,y) & 0xffffff){
+	  
+	  ret += (data[i]-average)*(data[i]-average);
+	  i++;
+	}
+      }
     }
   }
   ret /= totalSize;
@@ -497,13 +547,6 @@ void cass::PostProcessor::extractEnergy(cass::CASSEvent &cassevent){
 }
 					      
 
-void cass::PostProcessor::openOutputFiles(CASSEvent &cassevent){
-  if(!currentXtcFile || strcmp(currentXtcFile,cassevent.filename())){
-    /* files are different. Open new file */
-    currentXtcFile = cassevent.filename();    
-  }
-}
-
 namespace cass{
   void PostProcessor::addToIntegratedImage(CASSEvent &cassevent){
     int nframes = cassevent.pnCCDEvent().detectors().size();
@@ -530,9 +573,9 @@ namespace cass{
       m_columns.append(cassevent.pnCCDEvent().detectors()[i].columns());
       if(m_rows.last()*m_columns.last() == 0){
 	/* dummy */
-	m_data.append(new long long[1]);	
+	m_data.append(new double[1]);	
       }else{
-	m_data.append(new long long[m_rows.last()*m_columns.last()]);	
+	m_data.append(new double[m_rows.last()*m_columns.last()]);	
       }
     }
   }
@@ -582,7 +625,7 @@ namespace cass{
 	skipped++;
 	continue;
       }
-      long long *data = m_data[i];
+      double *data = m_data[i];
 
       char fieldname[100]; 
       sprintf(fieldname,"/data/data%i",i-skipped);
@@ -590,14 +633,23 @@ namespace cass{
       dims[0] = rows;
       dims[1] = columns;
       dataspace_id = H5Screate_simple( 2, dims, NULL);
-      dataset_id = H5Dcreate1(hdf_fileID, fieldname, H5T_NATIVE_SHORT, dataspace_id, H5P_DEFAULT);
-      if( H5Dwrite(dataset_id, H5T_NATIVE_LONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, data)< 0){
+      dataset_id = H5Dcreate1(hdf_fileID, fieldname, H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+      if( H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, data)< 0){
 	printf("Error when writing data %i...\n",i);
 	return;
       }
       H5Dclose(dataset_id);
       H5Sclose(dataspace_id);
     }
+    dims[0] = 1;
+    dataspace_id = H5Screate_simple( 1, dims, NULL );
+    int adjusted_nframes = nframes-skipped;
+    dataset_id = H5Dcreate1(hdf_fileID, "/data/nframes", H5T_NATIVE_SHORT, dataspace_id, H5P_DEFAULT);
+    H5Dwrite(dataset_id, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT,&adjusted_nframes );
+    H5Dclose(dataset_id);
+    H5Sclose(dataspace_id);
+
+    H5Lcreate_soft( "/data/data0", hdf_fileID, "/data/data",0,0);
     H5Gclose(gid);
     H5Fclose(hdf_fileID);    
   }

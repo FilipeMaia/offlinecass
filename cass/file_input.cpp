@@ -39,6 +39,14 @@ void cass::FileInput::run()
       //read a line and put it into the file list//
       std::string line;
       getline(filelistfile,line);
+      /* remove newline */
+      if(line[line.length()-1] == '\n'){
+	  line.resize(line.length()-1);
+      }
+      /* dont read newlines */
+      if(line.empty() || line[0] == '\n'){
+	  continue;
+      }
       filelist.push_back(line);
       std::cout <<"file \""<<line<<"\" added to processing list"<<std::endl;
     }
@@ -54,6 +62,7 @@ void cass::FileInput::run()
     //open the file//
     std::ifstream xtcfile;
     xtcfile.open(filelistiterator->c_str(), std::ios::binary | std::ios::in);
+    cass::globalOptions.lastFile = QString(filelistiterator->c_str());
     //if there was such a file then we want to load it//
     if (xtcfile.is_open())
     {

@@ -46,6 +46,7 @@ void cass::Worker::run()
       _ringbuffer.doneProcessing(cassevent);
     }
   }
+  _postprocessor->finishProcessing();
   std::cout <<"worker is closing down"<<std::endl;
 }
 

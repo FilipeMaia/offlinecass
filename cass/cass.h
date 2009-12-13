@@ -2,7 +2,9 @@
 #define CASS_GLOBAL_H
 
 #include <QtCore/qglobal.h>
-#include <QString>
+#include <QtCore/QString>
+#include <QtGui/QImage>
+#include <QtCore/QDateTime>
 
 #if defined(CASS_LIBRARY)
 #  define CASSSHARED_EXPORT Q_DECL_EXPORT
@@ -21,6 +23,8 @@ public:
 	    onlyAnalyzeGivenHits = false;
 	    justIntegrateImages = false;
 	    outputAllEvents = false;
+	    useSignalMask[0] = false;
+	    useSignalMask[1] = false;
 	}
     bool outputHitsToFile;
     QString hitsOutputFile;
@@ -28,7 +32,13 @@ public:
     QString hitsInputFile;
     bool justIntegrateImages;
     bool outputAllEvents;        
-    QString integratedImageOutput;
+    bool useSignalMask[2];
+    QString signalMaskFile[2];    
+    QImage signalMask[2];
+    bool discardCCD[2];
+    QDateTime startTime;
+    QDateTime endTime;
+    QString lastFile;
 };
 
 extern cass::CommandLineOptions globalOptions;

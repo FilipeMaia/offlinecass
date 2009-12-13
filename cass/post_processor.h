@@ -5,6 +5,7 @@
 #include "cass_event.h"
 #include <stdio.h>
 #include <QList>
+#include <QFileInfo>
 
 namespace cass
 {
@@ -26,7 +27,7 @@ namespace cass
     int m_nframes;
     QList<int> m_rows;
     QList<int> m_columns;
-    QList<long long *> m_data;
+    QList<double*> m_data;
   };
 
   class PostProcessor
@@ -35,24 +36,27 @@ namespace cass
     	PostProcessor()   
       	{
 	  printf("Post_processor creator called here\n");
-	  currentXtcFile = 0;
 	  firstIntegratedImage = true;
 	}
 		
 	~PostProcessor(){
 	  printf("Post_processor destructor called here\n");
-	  integratedImage.outputImage(globalOptions.integratedImageOutput.toAscii().constData());
 	}
 
     public:
       void postProcess(CASSEvent&);
       void integrateByQ(CASSEvent&);
+      void finishProcessing(){
+	  char outfile[1024];
+	  sprintf(outfile,"%s_integrated.h5",
+		  QFileInfo(cass::globalOptions.lastFile).baseName().toAscii().constData());
+	  printf("outfile - %s\n",outfile);
+	  integratedImage.outputImage(outfile);
+      }
   private:
       void appendIntegratedByQ(CASSEvent &cassevent,float * x, float * y,int n,int frame);
-      const char * currentXtcFile;
-      void openOutputFiles(CASSEvent &cassevent);
       void extractEnergy(CASSEvent &cassevent);
-      long long integrateImage(cass::CASSEvent &cassevent);
+      long long  integrateImage(cass::CASSEvent &cassevent);
       double stdDevImage(cass::CASSEvent &cassevent,long long integral);
       bool isGoodImage(cass::CASSEvent &cassevent);
       void addToIntegratedImage(cass::CASSEvent &cassevent);

@@ -14,8 +14,8 @@
 cass::FormatConverter::FormatConverter()
 {
     // create all the necessary individual format converters
-  _converters[REMI]        = new cass::REMI::Converter();
-  _converters[Pulnix]      = new cass::VMI::Converter();
+//  _converters[REMI]        = new cass::REMI::Converter();
+//  _converters[Pulnix]      = new cass::VMI::Converter();
   _converters[pnCCD]       = new cass::pnCCD::Converter();
   _converters[MachineData] = new cass::MachineData::Converter();
 }
@@ -51,7 +51,7 @@ bool cass::FormatConverter::processDatagram(cass::CASSEvent *cassevent)
       if (datagram->seq.service() == Pds::TransitionId::L1Accept)
       {
 	  //extract the bunchId from the datagram//
-	  uint64_t bunchId = datagram->seq.clock().seconds();
+	  uint64_t bunchId = datagram->seq.clock().seconds();	  
 	  bunchId = (bunchId<<32) + static_cast<uint32_t>(datagram->seq.stamp().fiducials()<<8);
 	  
 	  //set the id of the cassevent//

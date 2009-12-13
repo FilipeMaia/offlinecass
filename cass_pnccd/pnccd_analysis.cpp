@@ -5,6 +5,7 @@
 #include "pnccd_event.h"
 #include "cass_event.h"
 #include "pnccd_analysis_lib.h"
+#include "pdsdata/xtc/Dgram.hh"
 
 #include <vector>
 
@@ -94,6 +95,23 @@ void cass::pnCCD::Analysis::operator ()(cass::CASSEvent* cassevent)
     pnccdevent.detectors()[i].nonrecombined().clear();
     pnccdevent.detectors()[i].calibrated()=false;
   }
+
+  Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent->datagrambuffer());
+  time_t eventTime = datagram->seq.clock().seconds();
+ 
+ /* return if we're not interested in this time */
+  if(cass::globalOptions.startTime.isValid() && 
+     QDateTime::fromTime_t(eventTime).time() < cass::globalOptions.startTime.time()){
+      printf("Skipping frame before startTime\n");
+    return;
+  }
+  if(cass::globalOptions.endTime.isValid() && 
+     QDateTime::fromTime_t(eventTime).time() > cass::globalOptions.endTime.time()){
+      printf("Skipping frame after endTime\n");
+    return;
+  }
+
+
 
   //check if we have enough rebin parameters and darkframe names for the amount of detectors//
   //increase it if necessary

@@ -27,9 +27,15 @@ void parseOptions(int argc, char ** argv){
     -l: Only analyze hits given on this file\n\
     -s: Output one single integrated image to this file\n\
     -a: Output all pnCCD events regardless of signal\n\
+    -m: Use the given mask for CCD 0 when calculating signal metrics\n\
+    -M: Use the given mask for CCD 1 when calculating signal metrics\n\
+    -d: Discard CCD 0\n\
+    -D: Discard CCD 1\n\
+    -t: Start time for conversion\n\
+    -T: End time for conversion\n\
     -h: print this text\n\
 ";
-  static char optstring[] = "x:l:s:ah";
+  static char optstring[] = "x:l:sm:M:t:T:adDh";
   while(1){
     c = getopt(argc,argv,optstring);
     if(c == -1){
@@ -41,7 +47,6 @@ void parseOptions(int argc, char ** argv){
 	break;
     case 's':
 	cass::globalOptions.justIntegrateImages = true;
-	cass::globalOptions.integratedImageOutput = QString(optarg);
 	break;
     case 'x':
 	cass::globalOptions.outputHitsToFile = true;
@@ -50,6 +55,32 @@ void parseOptions(int argc, char ** argv){
     case 'l':
 	cass::globalOptions.onlyAnalyzeGivenHits = true;
 	cass::globalOptions.hitsInputFile = QString(optarg);
+	break;
+    case 'm':
+	cass::globalOptions.useSignalMask[0] = true;
+	cass::globalOptions.signalMaskFile[0] = QString(optarg);
+	/* Try to open the mask file */
+	cass::globalOptions.signalMask[0] = QImage(cass::globalOptions.signalMaskFile[0]);
+      break;
+    case 'M':
+	cass::globalOptions.useSignalMask[1] = true;
+	cass::globalOptions.signalMaskFile[1] = QString(optarg);
+	/* Try to open the mask file */
+	cass::globalOptions.signalMask[1] = QImage(cass::globalOptions.signalMaskFile[1]);
+      break;
+    case 'd':
+	cass::globalOptions.discardCCD[0] = true;
+      break;
+    case 'D':
+	cass::globalOptions.discardCCD[1] = true;
+      break;
+    case 't':
+	cass::globalOptions.startTime =
+	    QDateTime::fromString(QString(optarg),QString("hh:mm:ss"));
+	break;
+    case 'T':
+	cass::globalOptions.endTime =
+	    QDateTime::fromString(QString(optarg),QString("hh:mm:ss"));
       break;
     case 'h':
       printf("%s",help_text);
