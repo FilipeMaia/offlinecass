@@ -102,17 +102,17 @@ void cass::pnCCD::Analysis::operator ()(cass::CASSEvent* cassevent)
  /* return if we're not interested in this time */
   if(cass::globalOptions.startTime.isValid() && 
      QDateTime::fromTime_t(eventTime).time() < cass::globalOptions.startTime.time()){
-      printf("Skipping frame before startTime\n");
+//      printf("Skipping frame before startTime\n");
     return;
   }
   if(cass::globalOptions.endTime.isValid() && 
      QDateTime::fromTime_t(eventTime).time() > cass::globalOptions.endTime.time()){
-      printf("Skipping frame after endTime\n");
+//      printf("Skipping frame after endTime\n");
     return;
   }
 
   if(cass::globalOptions.eventCounter % cass::globalOptions.skipPeriod != 0){
-      printf("Skipping frame not in the beggining of period\n");
+//      printf("Skipping frame not in the beggining of period\n");
       return;
   }
 

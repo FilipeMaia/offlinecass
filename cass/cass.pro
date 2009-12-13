@@ -1,5 +1,6 @@
 # Copyright (C) 2009 jk, ncoppola, lmf
 qt += core gui
+#CONFIG += static release
 CONFIG += static debug
 TEMPLATE = app
 TARGET = cass

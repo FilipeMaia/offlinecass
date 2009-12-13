@@ -7,6 +7,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QWidget>
 #include <QtGui/QSlider>
+#include <QtGui/QCheckBox>
 #include <QtCore/QDateTime>
 
 #if defined(CASS_LIBRARY)
@@ -33,6 +34,7 @@ public:
 	    skipPeriod = 1;
 	    eventCounter = 0;
 	    displayIntegration = 0;
+	    justIntegrateImagesThreshold = 0;
 	}
     bool outputHitsToFile;
     QString hitsOutputFile;
@@ -50,6 +52,7 @@ public:
     int skipPeriod;
     int eventCounter;
     bool displayIntegration;
+    float justIntegrateImagesThreshold;
 };
 
 
@@ -66,6 +69,7 @@ public:
     void changeMin(){
 	minModifier = 1.0-minSlider->value()/100.0;
     }
+
 			  
 private:
     QLabel * m_label;
@@ -74,7 +78,7 @@ private:
     float minModifier;
     QSlider * maxSlider;
     QSlider * minSlider;
-
+    QCheckBox * logScale;
 };
 
 

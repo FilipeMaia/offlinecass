@@ -324,27 +324,27 @@ void cass::PostProcessor::postProcess(cass::CASSEvent &cassevent)
   Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent.datagrambuffer());
   time_t eventTime = datagram->seq.clock().seconds();
   if(cass::globalOptions.startTime.isValid()){
-    printf("Start Time %s\n",cass::globalOptions.startTime.toString().toAscii().constData());
-    printf("Event Time %s\n",QDateTime::fromTime_t(eventTime).toString().toAscii().constData());
-    printf("startTime valid\n");
+    //    printf("Start Time %s\n",cass::globalOptions.startTime.toString().toAscii().constData());
+    //    printf("Event Time %s\n",QDateTime::fromTime_t(eventTime).toString().toAscii().constData());
+    //    printf("startTime valid\n");
   }
   if(cass::globalOptions.endTime.isValid()){
-    printf("%s\n",cass::globalOptions.endTime.toString().toAscii().constData());
-    printf("endTime valid\n");
+    //    printf("%s\n",cass::globalOptions.endTime.toString().toAscii().constData());
+    //    printf("endTime valid\n");
   }
   if(cass::globalOptions.startTime.isValid() && 
      QDateTime::fromTime_t(eventTime).time() < cass::globalOptions.startTime.time()){
-      printf("Skipping frame before startTime at postProcess\n");
+    //      printf("Skipping frame before startTime at postProcess\n");
     return;
   }
   if(cass::globalOptions.endTime.isValid() && 
      QDateTime::fromTime_t(eventTime).time() > cass::globalOptions.endTime.time()){
-    printf("Skipping frame after endTime at postProcess\n");
+    //    printf("Skipping frame after endTime at postProcess\n");
     return;
   }
 
   if(cass::globalOptions.eventCounter % cass::globalOptions.skipPeriod != 0){
-      printf("Skipping frame not in the beggining of period\n");
+    //      printf("Skipping frame not in the beggining of period\n");
       return;
   }
 
@@ -358,6 +358,9 @@ void cass::PostProcessor::postProcess(cass::CASSEvent &cassevent)
     }
     if(cass::globalOptions.justIntegrateImages == true){
       addToIntegratedImage(cassevent);
+      if(cass::globalOptions.eventCounter % 100 == 0){
+	finishProcessing();
+      }
     }
   }
   printf("\n");
@@ -617,7 +620,9 @@ namespace cass{
 	}
 	int16_t *data = &cassevent.pnCCDEvent().detectors()[i].correctedFrame()[0];
 	for(int j = 0;j<rows*columns;j++){
-	  m_data[i][j] += data[j];
+	  if(data[j] > cass::globalOptions.justIntegrateImagesThreshold){
+	    m_data[i][j] += data[j];
+	  }
 	}
     }
 
@@ -668,7 +673,7 @@ namespace cass{
     H5Fclose(hdf_fileID);    
   }
 
-  QImage HDRImage::toQImage(int frame,double maxModifier,double minModifier){
+  QImage HDRImage::toQImage(int frame,double maxModifier,double minModifier,int useLog){
     if(m_nframes <= frame){
       return QImage();
     }
@@ -682,12 +687,21 @@ namespace cass{
 	min = m_data[frame][i];
       }      
     }
-    max = maxModifier*(max-min)+min;
-    min = minModifier*(max-min)+min;
+    if(useLog){
+      max = exp(maxModifier*(log(max-min)))+min;
+      min = exp(minModifier*(log(max-min)))+min;
+    }else{
+      max = maxModifier*(max-min)+min;
+      min = minModifier*(max-min)+min;
+    }
     if(!(isfinite(max) && isfinite(min))){
       return QImage();
     }
-    unsigned char * colormap_data = sp_image_get_false_color(frame,SpColormapTraditional,min,max);
+    int colormap = SpColormapTraditional;
+    if(useLog){
+      colormap |= SpColormapLogScale;
+    }
+    unsigned char * colormap_data = sp_image_get_false_color(frame,colormap,min,max);
     return QImage(colormap_data,m_columns[frame],m_rows[frame],QImage::Format_RGB32);
   }
     

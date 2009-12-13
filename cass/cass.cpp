@@ -28,6 +28,7 @@ void parseOptions(int argc, char ** argv){
     -x: Hits output file\n\
     -l: Only analyze hits given on this file\n\
     -s: Output one single integrated image to this file\n\
+    -c: Threshold above which to integrate signal\n\
     -a: Output all pnCCD events regardless of signal\n\
     -m: Use the given mask for CCD 0 when calculating signal metrics\n\
     -M: Use the given mask for CCD 1 when calculating signal metrics\n\
@@ -39,7 +40,7 @@ void parseOptions(int argc, char ** argv){
     -G: Integrate images and display as we go\n\
     -h: print this text\n\
 ";
-  static char optstring[] = "x:l:sm:M:t:T:S:GadDh";
+  static char optstring[] = "x:l:s:c:m:M:t:T:S:GadDh";
   while(1){
     c = getopt(argc,argv,optstring);
     if(c == -1){
@@ -51,6 +52,9 @@ void parseOptions(int argc, char ** argv){
 	break;
     case 's':
 	cass::globalOptions.justIntegrateImages = true;
+	break;
+    case 'c':
+	cass::globalOptions.justIntegrateImagesThreshold = atof(optarg);
 	break;
     case 'x':
 	cass::globalOptions.outputHitsToFile = true;
@@ -115,8 +119,12 @@ cass::DisplayWidget::DisplayWidget(cass::PostProcessor * pp){
     minSlider->setOrientation(Qt::Horizontal);
     minSlider->setValue(99);
     hbox->addWidget(minSlider);
-    m_label = new QLabel("little label",this);   
+    m_label = new QLabel("little label",this);  
+    logScale = new QCheckBox("Log Scale");
+    hbox->addWidget(logScale);
     layout->addWidget(m_label);
+    logScale->setChecked(true);
+    connect(logScale,SIGNAL(setChecked(bool)),this,SLOT(setLogScale(bool)));
     connect(maxSlider,SIGNAL(sliderReleased()),this,SLOT(changeMax()));
     connect(minSlider,SIGNAL(sliderReleased()),this,SLOT(changeMin()));
     m_pp = pp;
@@ -125,9 +133,11 @@ cass::DisplayWidget::DisplayWidget(cass::PostProcessor * pp){
     
 }
 
+
 void cass::DisplayWidget::update(){
     m_label->setText(QString::number(cass::globalOptions.eventCounter));
-    m_label->setPixmap(QPixmap::fromImage(m_pp->integratedImage.toQImage(1,maxModifier,minModifier)));
+    m_label->setPixmap(QPixmap::fromImage(m_pp->integratedImage.toQImage(1,maxModifier,
+									 minModifier,logScale->checkState() == Qt::Checked)));
 }
 
 int main(int argc, char **argv)

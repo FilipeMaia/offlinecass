@@ -33,7 +33,7 @@ namespace cass
     ~HDRImage();
     void addToImage(CASSEvent &cassevent); 
       void outputImage(const char * filename);
-      QImage toQImage(int frame,double maxModifier,double minModifier);
+      QImage toQImage(int frame,double maxModifier,double minModifier,int log);
   private:
       HDRImage::sp_rgb colormap_rgb_from_value(double value, int colormap);
       void hsv_to_rgb(double H,double S,double V,double * R,double *G,double *B);
@@ -60,7 +60,7 @@ namespace cass
 	  char outfile[1024];
 	  sprintf(outfile,"%s_integrated.h5",
 		  QFileInfo(cass::globalOptions.lastFile).baseName().toAscii().constData());
-	  printf("outfile - %s\n",outfile);
+	  //	  printf("outfile - %s\n",outfile);
 	  integratedImage.outputImage(outfile);
       }
       HDRImage integratedImage;
