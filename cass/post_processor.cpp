@@ -21,6 +21,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include <QFileInfo>
+#include <QtGui/QLabel>
+#include <QtGui>
 
 
 /* 
@@ -340,6 +342,12 @@ void cass::PostProcessor::postProcess(cass::CASSEvent &cassevent)
     printf("Skipping frame after endTime at postProcess\n");
     return;
   }
+
+  if(cass::globalOptions.eventCounter % cass::globalOptions.skipPeriod != 0){
+      printf("Skipping frame not in the beggining of period\n");
+      return;
+  }
+
   postProcess_printinfo(cassevent);
   
   if(cass::globalOptions.outputAllEvents || isGoodImage(cassevent)){	  
@@ -562,6 +570,12 @@ namespace cass{
     }
   }
 
+  PostProcessor::PostProcessor()   
+  {
+    printf("Post_processor creator called here\n");
+    firstIntegratedImage = true;
+  }
+
   HDRImage::HDRImage(){
     m_nframes = 0;
   }
@@ -653,6 +667,210 @@ namespace cass{
     H5Gclose(gid);
     H5Fclose(hdf_fileID);    
   }
+
+  QImage HDRImage::toQImage(int frame,double maxModifier,double minModifier){
+    if(m_nframes <= frame){
+      return QImage();
+    }
+    double min = m_data[frame][0];
+    double max = m_data[frame][0];
+    for(int i = 0;i<m_rows[frame]*m_columns[frame];i++){
+      if(max < m_data[frame][i]){
+	max = m_data[frame][i];
+      }
+      if(min > m_data[frame][i]){
+	min = m_data[frame][i];
+      }      
+    }
+    max = maxModifier*(max-min)+min;
+    min = minModifier*(max-min)+min;
+    if(!(isfinite(max) && isfinite(min))){
+      return QImage();
+    }
+    unsigned char * colormap_data = sp_image_get_false_color(frame,SpColormapTraditional,min,max);
+    return QImage(colormap_data,m_columns[frame],m_rows[frame],QImage::Format_RGB32);
+  }
+    
+
+  HDRImage::sp_rgb HDRImage::colormap_rgb_from_value(double value, int colormap){
+    sp_rgb ret = {0,0,0};
+    if(colormap & SpColormapGrayScale){       
+      ret.r = value;
+      ret.g = value;
+      ret.b = value;
+    }else if(colormap & SpColormapTraditional){       
+      ret.r = sqrt(value);
+      ret.g = value*value*value;
+      ret.b = sin(value*2*M_PI);
+    }else if(colormap & SpColormapHot){
+      ret.r = 3*value;
+      ret.g = 3*value-1;
+      ret.b = 3*value-2;
+    }else if(colormap & SpColormapRainbow){
+      ret.r = fabs(2*value-0.5);
+      ret.g = sin(value*M_PI);
+      ret.b = cos(value*M_PI/2);
+    }else if(colormap & SpColormapJet){
+      if(value < 1/8.0){
+	ret.r = 0;
+	ret.g = 0;
+	ret.b = (value+1.0/8.0)*4;	   
+      }else if(value < 3/8.0){
+	ret.r = 0;
+      ret.g = (value-1.0/8.0)*4;
+      ret.b = 1;
+      }else if(value < 5/8.0){
+	ret.r = (value-3.0/8.0)*4;
+	ret.g = 1;
+	ret.b = 1-(value-3.0/8.0)*4;
+      }else if(value < 7/8.0){
+	ret.r = 1;
+	ret.g = 1-(value-5.0/8.0)*4;
+	ret.b = 0;
+      }else if(value <= 1.01){
+	ret.r = 1-(value-7.0/8.0)*4;;
+	ret.g = 0;
+	ret.b = 0;
+      }
+    }
+    
+    ret.r = qMin((double)1,ret.r);
+    ret.g = qMin((double)1,ret.g);
+    ret.b = qMin((double)1,ret.b);
+    ret.r = qMax((double)0,ret.r);
+    ret.g = qMax((double)0,ret.g);
+    ret.b = qMax((double)0,ret.b);
+    ret.r *= 255;
+    ret.g *= 255;
+    ret.b *= 255;
+    
+    if(colormap & SpColormapWheel){
+      hsv_to_rgb(360*value,1.0,1.0,&ret.r,&ret.g,&ret.b);
+    }
+    return ret;
+  }
+
+  void HDRImage::hsv_to_rgb(double H,double S,double V,double * R,double *G,double *B){
+    if( V == 0 ){ 
+      *R = 0;
+      *G = 0;
+      *B = 0; 
+    }else if( S == 0 ) {                                                                   
+      *R = V;                                                            
+      *G = V;                                                            
+    *B = V;                                                            
+    } else {                                                                   
+      const double hf = H / 60.0;                                       
+      const int    i  = (int) floor( hf );                              
+      const double f  = hf - i;                                         
+      const double pv  = V * ( 1 - S );                                 
+      const double qv  = V * ( 1 - S * f );                             
+      const double tv  = V * ( 1 - S * ( 1 - f ) );                     
+      switch( i ){                                                               
+      case 0: 
+	*R = V; 
+	*G = tv;
+	*B = pv;
+	break; 
+      case 1:
+	*R = qv;
+	*G = V;
+	*B = pv;
+	break;
+      case 2:
+	*R = pv; 
+	*G = V;
+	*B = tv;
+	break; 
+      case 3: 
+	*R = pv;
+	*G = qv;
+	*B = V;
+	break;
+      case 4:  
+	*R = tv; 
+	*G = pv;
+	*B = V;
+	break;  
+      case 5:
+	*R = V;
+	*G = pv;
+	*B = qv; 
+	break;
+      case 6: 
+	*R = V;
+	*G = tv;    
+	*B = pv; 
+	break; 
+      case -1:  
+	*R = V;
+	*G = pv; 
+	*B = qv;
+	break;
+      default:
+	fprintf(stderr,"i Value error in HSV to *R*G*B conversion, Value is %d",i);
+	break;
+      }									
+    }									
+    *R *= 255.0F;                                                        
+    *G *= 255.0F;                                                        
+    *B *= 255.0F;  
+  }
+
+
+  void HDRImage::colormap_create_table(sp_rgb color_table[256],int colormap){
+    for(int i = 0;i<256;i++){
+      double value = i/255.0;
+    color_table[i] = colormap_rgb_from_value(value,colormap);
+    }
+  }
+  
+  unsigned char * HDRImage::sp_image_get_false_color(int frame,int color, double min, double max){
+
+    int i,x,y;
+    double log_of_scale;
+    sp_rgb color_table[256];
+    double scale,offset,max_v,min_v,value;
+    double phase;
+    unsigned char * out = new unsigned char[m_rows[frame]*m_columns[frame]*4];
+  
+  /*fclose(fp);
+    return 0;*/
+  max_v = m_data[frame][0];
+  min_v = m_data[frame][0];
+  
+  colormap_create_table(color_table,color);
+  
+  
+  max_v = max;
+  min_v = min;
+  scale = 65535/(max_v-min_v);
+  offset = min_v;
+  i = 0;
+  log_of_scale = log(65536);
+  /* this is a special kind of color */
+  for(int i = 0;i<m_rows[frame]*m_columns[frame];i++){
+    /* traditional color scale taken from gnuplot manual */
+    value = qMin(m_data[frame][i],max_v);
+    value = qMax(value,min_v);
+    value -= offset;
+    value *= scale;
+    
+    if(color & SpColormapLogScale){
+      value = log(value+1)/log_of_scale;
+    }else{
+      value /= 65535;
+    }
+    value *= 255;
+    out[i*4+2] =  color_table[(int)value].r;
+    out[i*4+1] = color_table[(int)value].g;
+    out[i*4] = color_table[(int)value].b;    
+    i++;
+  }
+  return out;
+  }
+
 }
+
 
 

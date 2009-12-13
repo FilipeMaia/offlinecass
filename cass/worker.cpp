@@ -44,6 +44,7 @@ void cass::Worker::run()
 
       //we are done, so tell the ringbuffer//
       _ringbuffer.doneProcessing(cassevent);
+      cass::globalOptions.eventCounter++;
     }
   }
   _postprocessor->finishProcessing();

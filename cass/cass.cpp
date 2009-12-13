@@ -12,7 +12,9 @@
 #include "ratemeter.h"
 #include "dialog.h"
 #include "worker.h"
+#include "post_processor.h"
 #include <unistd.h>
+#include <QtGui>
 
 namespace cass{
 cass::CommandLineOptions globalOptions;
@@ -33,9 +35,11 @@ void parseOptions(int argc, char ** argv){
     -D: Discard CCD 1\n\
     -t: Start time for conversion\n\
     -T: End time for conversion\n\
+    -S: Only look at every nth frame\n\
+    -G: Integrate images and display as we go\n\
     -h: print this text\n\
 ";
-  static char optstring[] = "x:l:sm:M:t:T:adDh";
+  static char optstring[] = "x:l:sm:M:t:T:S:GadDh";
   while(1){
     c = getopt(argc,argv,optstring);
     if(c == -1){
@@ -82,6 +86,12 @@ void parseOptions(int argc, char ** argv){
 	cass::globalOptions.endTime =
 	    QDateTime::fromString(QString(optarg),QString("hh:mm:ss"));
       break;
+    case 'S':
+	cass::globalOptions.skipPeriod = atoi(optarg);
+      break;
+    case 'G':
+	cass::globalOptions.displayIntegration = true;
+      break;
     case 'h':
       printf("%s",help_text);
       exit(0);
@@ -90,6 +100,34 @@ void parseOptions(int argc, char ** argv){
       printf ("?? getopt returned character code 0%o ??\n", c);
     }
   }
+}
+
+cass::DisplayWidget::DisplayWidget(cass::PostProcessor * pp){
+    QVBoxLayout * layout = new QVBoxLayout(this);
+    QHBoxLayout * hbox = new QHBoxLayout(this);
+    layout->addLayout(hbox);
+    hbox->addWidget(new QLabel("Max"));
+    maxSlider = new QSlider(this);
+    maxSlider->setOrientation(Qt::Horizontal);
+    hbox->addWidget(maxSlider);
+    hbox->addWidget(new QLabel("Min"));
+    minSlider = new QSlider(this);
+    minSlider->setOrientation(Qt::Horizontal);
+    minSlider->setValue(99);
+    hbox->addWidget(minSlider);
+    m_label = new QLabel("little label",this);   
+    layout->addWidget(m_label);
+    connect(maxSlider,SIGNAL(sliderReleased()),this,SLOT(changeMax()));
+    connect(minSlider,SIGNAL(sliderReleased()),this,SLOT(changeMin()));
+    m_pp = pp;
+    minModifier = 0;
+    maxModifier = 1;
+    
+}
+
+void cass::DisplayWidget::update(){
+    m_label->setText(QString::number(cass::globalOptions.eventCounter));
+    m_label->setPixmap(QPixmap::fromImage(m_pp->integratedImage.toQImage(1,maxModifier,minModifier)));
 }
 
 int main(int argc, char **argv)
@@ -113,6 +151,13 @@ int main(int argc, char **argv)
   // create a dialog object
   cass::Window * window(new cass::Window());
 
+  if(cass::globalOptions.displayIntegration){
+      QTimer * timer = new QTimer;
+      timer->start(1000);
+      cass::DisplayWidget * display = new cass::DisplayWidget(worker->_postprocessor);
+      display->show();
+      QObject::connect(timer, SIGNAL(timeout()), display, SLOT(update()));    
+  }
 
   //when the quit button has been pushed we want to close the application//
   QObject::connect(window, SIGNAL(quit()), input, SLOT(end()));

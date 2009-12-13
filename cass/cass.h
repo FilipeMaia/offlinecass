@@ -4,6 +4,9 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/QString>
 #include <QtGui/QImage>
+#include <QtGui/QLabel>
+#include <QtGui/QWidget>
+#include <QtGui/QSlider>
 #include <QtCore/QDateTime>
 
 #if defined(CASS_LIBRARY)
@@ -15,6 +18,8 @@
 namespace cass{
 const int RingBufferSize=4;
 
+class PostProcessor;
+
 class CommandLineOptions{
 public:
     CommandLineOptions()
@@ -25,6 +30,9 @@ public:
 	    outputAllEvents = false;
 	    useSignalMask[0] = false;
 	    useSignalMask[1] = false;
+	    skipPeriod = 1;
+	    eventCounter = 0;
+	    displayIntegration = 0;
 	}
     bool outputHitsToFile;
     QString hitsOutputFile;
@@ -39,7 +47,36 @@ public:
     QDateTime startTime;
     QDateTime endTime;
     QString lastFile;
+    int skipPeriod;
+    int eventCounter;
+    bool displayIntegration;
 };
+
+
+class DisplayWidget: public QWidget{
+    Q_OBJECT
+public:
+    DisplayWidget(PostProcessor * pp);
+  public slots:
+  void update();
+ private slots:
+ void changeMax(){
+     maxModifier = 1.0-maxSlider->value()/100.0;
+ }
+    void changeMin(){
+	minModifier = 1.0-minSlider->value()/100.0;
+    }
+			  
+private:
+    QLabel * m_label;
+    PostProcessor * m_pp;
+    float maxModifier;
+    float minModifier;
+    QSlider * maxSlider;
+    QSlider * minSlider;
+
+};
+
 
 extern cass::CommandLineOptions globalOptions;
 

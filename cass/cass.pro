@@ -31,7 +31,8 @@ HEADERS +=  analysis_backend.h \
             dialog.h \
             ringbuffer.h \
             worker.h \
-            post_processor.h
+            post_processor.h \
+            cass.h
 
 INCLUDEPATH +=  ./ \
                 $$(LCLSSYSINCLUDE) \

@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <QList>
 #include <QFileInfo>
+#include <QtGui/QLabel>
 
 namespace cass
 {
@@ -15,6 +16,16 @@ namespace cass
   class HDRImage
   {
   public:
+    struct sp_rgb{
+      double r;
+      double g;
+      double b;
+    };
+  typedef enum{SpColormapFirstColorScheme=1,SpColormapGrayScale=1,SpColormapTraditional=2,
+	     SpColormapHot=4,SpColormapRainbow=8,SpColormapJet=16,
+	       SpColormapWheel=32,SpColormapLastColorScheme=64,SpColormapLogScale=128,SpColormapPhase=256,
+	     SpColormapWeightedPhase=512,SpColormapMask=1024}SpColormap;
+
     HDRImage();
     /* create a high dynamic range image with the same dimensions as
      the cass image */
@@ -22,8 +33,12 @@ namespace cass
     ~HDRImage();
     void addToImage(CASSEvent &cassevent); 
       void outputImage(const char * filename);
-
+      QImage toQImage(int frame,double maxModifier,double minModifier);
   private:
+      HDRImage::sp_rgb colormap_rgb_from_value(double value, int colormap);
+      void hsv_to_rgb(double H,double S,double V,double * R,double *G,double *B);
+      unsigned char * sp_image_get_false_color(int frame,int color, double min, double max);
+      void colormap_create_table(sp_rgb color_table[256],int colormap);
     int m_nframes;
     QList<int> m_rows;
     QList<int> m_columns;
@@ -33,12 +48,7 @@ namespace cass
   class PostProcessor
   {
     public:
-    	PostProcessor()   
-      	{
-	  printf("Post_processor creator called here\n");
-	  firstIntegratedImage = true;
-	}
-		
+    PostProcessor();		
 	~PostProcessor(){
 	  printf("Post_processor destructor called here\n");
 	}
@@ -53,6 +63,8 @@ namespace cass
 	  printf("outfile - %s\n",outfile);
 	  integratedImage.outputImage(outfile);
       }
+      HDRImage integratedImage;
+
   private:
       void appendIntegratedByQ(CASSEvent &cassevent,float * x, float * y,int n,int frame);
       void extractEnergy(CASSEvent &cassevent);
@@ -61,7 +73,8 @@ namespace cass
       bool isGoodImage(cass::CASSEvent &cassevent);
       void addToIntegratedImage(cass::CASSEvent &cassevent);
       bool firstIntegratedImage;
-      HDRImage integratedImage;
+      QWidget * integrationDisplay;
+      QLabel * labelDisplay;
   };
 }
 

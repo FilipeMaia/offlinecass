@@ -24,6 +24,7 @@ namespace cass
       ~Worker();
 
       void run();
+      PostProcessor                       *_postprocessor;
 
     public slots:
       void end();
@@ -32,7 +33,6 @@ namespace cass
       lmf::RingBuffer<cass::CASSEvent,cass::RingBufferSize>  &_ringbuffer;
       Analyzer                            *_analyzer;
       FormatConverter                     *_converter;
-      PostProcessor                       *_postprocessor;
       bool                                 _quit;
   };
 }

@@ -111,6 +111,10 @@ void cass::pnCCD::Analysis::operator ()(cass::CASSEvent* cassevent)
     return;
   }
 
+  if(cass::globalOptions.eventCounter % cass::globalOptions.skipPeriod != 0){
+      printf("Skipping frame not in the beggining of period\n");
+      return;
+  }
 
 
   //check if we have enough rebin parameters and darkframe names for the amount of detectors//
