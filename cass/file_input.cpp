@@ -75,7 +75,7 @@ void cass::FileInput::run()
         //read the datagram from the file in the ringbuffer//
         Pds::Dgram& dg = *reinterpret_cast<Pds::Dgram*>(cassevent->datagrambuffer());
 	time_t eventTime = dg.seq.clock().seconds();
-	if(cass::globalOptions.endTime.isValid() && 
+	if(eventTime && cass::globalOptions.endTime.isValid() && 
 	   QDateTime::fromTime_t(eventTime).time() > cass::globalOptions.endTime.time()){
 	    printf("Skipping rest of file\n");
 	    return;

@@ -368,14 +368,19 @@ void cass::PostProcessor::postProcess(cass::CASSEvent &cassevent)
 
 bool cass::PostProcessor::isGoodImage(cass::CASSEvent &cassevent){
   bool good = true;
-  long long integral = integrateImage(cassevent);
-  if(integral < 0){
-    good = false;
+  long long integral;
+  if(cass::globalOptions.useIntegrationThreshold){
+    integral = integrateImage(cassevent,cass::globalOptions.justIntegrateImagesThreshold);    
+  }else{
+    integral = integrateImage(cassevent);
+  }
+  if(integral <= 0){
+    return false;
   }
 
   double stdDev = stdDevImage(cassevent,integral);
   if(stdDev < sqrt(1000)){
-    good = false;
+    return false;
   }
   if(cass::globalOptions.outputHitsToFile && good){
     Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent.datagrambuffer());
@@ -387,7 +392,7 @@ bool cass::PostProcessor::isGoodImage(cass::CASSEvent &cassevent){
   return good;
 }
 
-long long cass::PostProcessor::integrateImage(cass::CASSEvent &cassevent){
+long long cass::PostProcessor::integrateImage(cass::CASSEvent &cassevent, float threshold){
   Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent.datagrambuffer());
   time_t eventTime = datagram->seq.clock().seconds();
   //		time_t eventTimeNs = datagram->seq.clock().nanoseconds();
@@ -408,11 +413,14 @@ long long cass::PostProcessor::integrateImage(cass::CASSEvent &cassevent){
     int columns = cassevent.pnCCDEvent().detectors()[frame].columns();
     int16_t *data = &cassevent.pnCCDEvent().detectors()[frame].correctedFrame()[0];
     int i = 0;
-    for(int x = 0;x<columns;x++){
-      for(int y = 0;y<rows;y++){
+    for(int y = 0;y<rows;y++){
+      for(int x = 0;x<columns;x++){
 	if(cass::globalOptions.useSignalMask[frame] == false || 
-	   (cass::globalOptions.signalMask[frame].pixel(x,y) & 0xffffff) == 0)
-	ret += data[i];
+	   (cass::globalOptions.signalMask[frame].pixel(x,y) & 0xffffff)){
+	   if(!threshold || threshold < data[i]){
+	    ret += data[i];
+	  }
+	}
 	i++;
       }
     }
@@ -447,7 +455,7 @@ double cass::PostProcessor::stdDevImage(cass::CASSEvent &cassevent,long long int
     for(int x = 0;x<columns;x++){
       for(int y = 0;y<rows;y++){	
 	if(cass::globalOptions.useSignalMask[frame] == false || 
-	   (cass::globalOptions.signalMask[frame].pixel(x,y) & 0xffffff) == 0){
+	   (cass::globalOptions.signalMask[frame].pixel(x,y) & 0xffffff)){
 	  totalSize++;
 	}
       }
@@ -620,7 +628,8 @@ namespace cass{
 	}
 	int16_t *data = &cassevent.pnCCDEvent().detectors()[i].correctedFrame()[0];
 	for(int j = 0;j<rows*columns;j++){
-	  if(data[j] > cass::globalOptions.justIntegrateImagesThreshold){
+	  if(!cass::globalOptions.useIntegrationThreshold ||
+	     data[j] > cass::globalOptions.justIntegrateImagesThreshold){
 	    m_data[i][j] += data[j];
 	  }
 	}

@@ -55,6 +55,7 @@ void parseOptions(int argc, char ** argv){
 	break;
     case 'c':
 	cass::globalOptions.justIntegrateImagesThreshold = atof(optarg);
+	cass::globalOptions.useIntegrationThreshold = true;	
 	break;
     case 'x':
 	cass::globalOptions.outputHitsToFile = true;

@@ -35,6 +35,8 @@ public:
 	    eventCounter = 0;
 	    displayIntegration = 0;
 	    justIntegrateImagesThreshold = 0;
+	    useIntegrationThreshold = false;
+	    
 	}
     bool outputHitsToFile;
     QString hitsOutputFile;
@@ -52,6 +54,7 @@ public:
     int skipPeriod;
     int eventCounter;
     bool displayIntegration;
+    bool useIntegrationThreshold;
     float justIntegrateImagesThreshold;
 };
 

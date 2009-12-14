@@ -68,7 +68,7 @@ namespace cass
   private:
       void appendIntegratedByQ(CASSEvent &cassevent,float * x, float * y,int n,int frame);
       void extractEnergy(CASSEvent &cassevent);
-      long long  integrateImage(cass::CASSEvent &cassevent);
+      long long  integrateImage(cass::CASSEvent &cassevent,float threshold = 0);
       double stdDevImage(cass::CASSEvent &cassevent,long long integral);
       bool isGoodImage(cass::CASSEvent &cassevent);
       void addToIntegratedImage(cass::CASSEvent &cassevent);
