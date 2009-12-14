@@ -36,7 +36,7 @@ public:
 	    displayIntegration = 0;
 	    justIntegrateImagesThreshold = 0;
 	    useIntegrationThreshold = false;
-	    
+	    alsoIntegrateImages = false;
 	}
     bool outputHitsToFile;
     QString hitsOutputFile;
@@ -56,6 +56,7 @@ public:
     bool displayIntegration;
     bool useIntegrationThreshold;
     float justIntegrateImagesThreshold;
+    bool alsoIntegrateImages;
 };
 
 

@@ -27,7 +27,8 @@ void parseOptions(int argc, char ** argv){
     \n\
     -x: Hits output file\n\
     -l: Only analyze hits given on this file\n\
-    -s: Output one single integrated image to this file\n\
+    -s: Only output one single integrated image to this file\n\
+    -I: Output integrated image to this file\n\
     -c: Threshold above which to integrate signal\n\
     -a: Output all pnCCD events regardless of signal\n\
     -m: Use the given mask for CCD 0 when calculating signal metrics\n\
@@ -40,7 +41,7 @@ void parseOptions(int argc, char ** argv){
     -G: Integrate images and display as we go\n\
     -h: print this text\n\
 ";
-  static char optstring[] = "x:l:s:c:m:M:t:T:S:GadDh";
+  static char optstring[] = "x:l:s:c:m:M:t:T:S:GadDIh";
   while(1){
     c = getopt(argc,argv,optstring);
     if(c == -1){
@@ -52,6 +53,9 @@ void parseOptions(int argc, char ** argv){
 	break;
     case 's':
 	cass::globalOptions.justIntegrateImages = true;
+	break;
+    case 'I':
+	cass::globalOptions.alsoIntegrateImages = true;
 	break;
     case 'c':
 	cass::globalOptions.justIntegrateImagesThreshold = atof(optarg);

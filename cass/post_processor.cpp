@@ -356,9 +356,10 @@ void cass::PostProcessor::postProcess(cass::CASSEvent &cassevent)
     if(cass::globalOptions.justIntegrateImages == false){
       postProcess_writeHDF5(cassevent);
     }
-    if(cass::globalOptions.justIntegrateImages == true){
+    if(cass::globalOptions.justIntegrateImages == true ||
+       cass::globalOptions.alsoIntegrateImages){
       addToIntegratedImage(cassevent);
-      if(cass::globalOptions.eventCounter % 100 == 0){
+      if(cass::globalOptions.eventCounter % 10 == 0){
 	finishProcessing();
       }
     }
@@ -375,6 +376,11 @@ bool cass::PostProcessor::isGoodImage(cass::CASSEvent &cassevent){
     integral = integrateImage(cassevent);
   }
   if(integral <= 0){
+    return false;
+  }
+  if(cass::globalOptions.useIntegrationThreshold && integral <
+     cass::globalOptions.useIntegrationThreshold*3){
+    /* don't accept image with just a couple of high pixels*/
     return false;
   }
 
@@ -627,10 +633,18 @@ namespace cass{
 	  printf("Number of cols doesn't match!\n");
 	}
 	int16_t *data = &cassevent.pnCCDEvent().detectors()[i].correctedFrame()[0];
-	for(int j = 0;j<rows*columns;j++){
-	  if(!cass::globalOptions.useIntegrationThreshold ||
-	     data[j] > cass::globalOptions.justIntegrateImagesThreshold){
-	    m_data[i][j] += data[j];
+	int j = 0;
+	for(int x = 0;x<columns;x++){
+	  for(int y = 0;y<rows;y++){	
+	    /*	    if(cass::globalOptions.useSignalMask[i] == false || 
+	      (cass::globalOptions.signalMask[i].pixel(x,y) & 0xffffff)){*/
+	      
+	      if(!cass::globalOptions.useIntegrationThreshold ||
+		 data[j] > cass::globalOptions.justIntegrateImagesThreshold){
+		m_data[i][j] += data[j];
+		/*	      }*/
+	    }
+	    j++;
 	  }
 	}
     }
