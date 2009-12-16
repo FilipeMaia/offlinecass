@@ -43,6 +43,7 @@ namespace cass
     QList<int> m_rows;
     QList<int> m_columns;
     QList<double*> m_data;
+    QList<int*> m_nImagesAdded;
   };
 
   class PostProcessor

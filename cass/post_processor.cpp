@@ -605,8 +605,14 @@ namespace cass{
       if(m_rows.last()*m_columns.last() == 0){
 	/* dummy */
 	m_data.append(new double[1]);	
+	m_nImagesAdded.append(new int[1]);	
       }else{
 	m_data.append(new double[m_rows.last()*m_columns.last()]);	
+	m_nImagesAdded.append(new int[m_rows.last()*m_columns.last()]);	
+	for(int j = 0;j<m_rows.last()*m_columns.last();j++){
+	  m_data.last()[j] = 0;
+	  m_nImagesAdded.last()[j] = 0;
+	}
       }
     }
   }
@@ -636,13 +642,21 @@ namespace cass{
 	int j = 0;
 	for(int x = 0;x<columns;x++){
 	  for(int y = 0;y<rows;y++){	
+	    if(cass::globalOptions.nImagesToAverage){
+	      m_data[i][j] *= (1-1.0/cass::globalOptions.nImagesToAverage);
+	    }
 	    /*	    if(cass::globalOptions.useSignalMask[i] == false || 
 	      (cass::globalOptions.signalMask[i].pixel(x,y) & 0xffffff)){*/
-	      
-	      if(!cass::globalOptions.useIntegrationThreshold ||
-		 data[j] > cass::globalOptions.justIntegrateImagesThreshold){
+	    
+	    if((cass::globalOptions.useIntegrationFloor &&
+		data[j] > cass::globalOptions.integrationFloor) ||
+	       !cass::globalOptions.useIntegrationThreshold ||
+	       data[j] > cass::globalOptions.justIntegrateImagesThreshold){
+	      if(!cass::globalOptions.useIntegrationCeiling ||
+		 data[j] < cass::globalOptions.integrationCeiling){
 		m_data[i][j] += data[j];
-		/*	      }*/
+		m_nImagesAdded[i][j]++;
+	      }
 	    }
 	    j++;
 	  }
@@ -720,7 +734,7 @@ namespace cass{
     if(!(isfinite(max) && isfinite(min))){
       return QImage();
     }
-    int colormap = SpColormapTraditional;
+    int colormap = SpColormapJet;
     if(useLog){
       colormap |= SpColormapLogScale;
     }

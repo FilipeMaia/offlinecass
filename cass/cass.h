@@ -8,6 +8,7 @@
 #include <QtGui/QWidget>
 #include <QtGui/QSlider>
 #include <QtGui/QCheckBox>
+#include <QtGui/QSpinBox>
 #include <QtCore/QDateTime>
 
 #if defined(CASS_LIBRARY)
@@ -37,6 +38,9 @@ public:
 	    justIntegrateImagesThreshold = 0;
 	    useIntegrationThreshold = false;
 	    alsoIntegrateImages = false;
+	    useIntegrationCeiling = false;
+	    useIntegrationFloor = false;
+	    nImagesToAverage = 0;
 	}
     bool outputHitsToFile;
     QString hitsOutputFile;
@@ -57,8 +61,15 @@ public:
     bool useIntegrationThreshold;
     float justIntegrateImagesThreshold;
     bool alsoIntegrateImages;
+    float integrationCeiling;
+    bool useIntegrationCeiling;
+    float integrationFloor;
+    bool useIntegrationFloor;
+    int nImagesToAverage;
 };
 
+
+extern cass::CommandLineOptions globalOptions;
 
 class DisplayWidget: public QWidget{
     Q_OBJECT
@@ -73,7 +84,9 @@ public:
     void changeMin(){
 	minModifier = 1.0-minSlider->value()/100.0;
     }
-
+    void changeImagesToAverage(int value){
+	globalOptions.nImagesToAverage = value;
+    }
 			  
 private:
     QLabel * m_label;
@@ -83,10 +96,11 @@ private:
     QSlider * maxSlider;
     QSlider * minSlider;
     QCheckBox * logScale;
+    QSpinBox * nImagesToAverage;
 };
 
 
-extern cass::CommandLineOptions globalOptions;
+
 
 }
 

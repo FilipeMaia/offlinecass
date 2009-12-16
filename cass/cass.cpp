@@ -30,6 +30,8 @@ void parseOptions(int argc, char ** argv){
     -s: Only output one single integrated image to this file\n\
     -I: Output integrated image to this file\n\
     -c: Threshold above which to integrate signal\n\
+    -C: Max threshold below which the signal is integrate\n\
+    -F: Integration floor\n\
     -a: Output all pnCCD events regardless of signal\n\
     -m: Use the given mask for CCD 0 when calculating signal metrics\n\
     -M: Use the given mask for CCD 1 when calculating signal metrics\n\
@@ -41,7 +43,7 @@ void parseOptions(int argc, char ** argv){
     -G: Integrate images and display as we go\n\
     -h: print this text\n\
 ";
-  static char optstring[] = "x:l:s:c:m:M:t:T:S:GadDIh";
+  static char optstring[] = "x:l:sc:m:M:t:T:S:GadDIh";
   while(1){
     c = getopt(argc,argv,optstring);
     if(c == -1){
@@ -60,6 +62,14 @@ void parseOptions(int argc, char ** argv){
     case 'c':
 	cass::globalOptions.justIntegrateImagesThreshold = atof(optarg);
 	cass::globalOptions.useIntegrationThreshold = true;	
+	break;
+    case 'C':
+	cass::globalOptions.integrationCeiling = atof(optarg);
+	cass::globalOptions.useIntegrationCeiling = true;	
+	break;
+    case 'F':
+	cass::globalOptions.integrationFloor = atof(optarg);
+	cass::globalOptions.useIntegrationFloor= true;	
 	break;
     case 'x':
 	cass::globalOptions.outputHitsToFile = true;
@@ -127,9 +137,17 @@ cass::DisplayWidget::DisplayWidget(cass::PostProcessor * pp){
     m_label = new QLabel("little label",this);  
     logScale = new QCheckBox("Log Scale");
     hbox->addWidget(logScale);
+    hbox->addWidget(new QLabel("# Images to average:"));
+    nImagesToAverage = new QSpinBox(this);
+    nImagesToAverage->setRange(0,10000);
+    nImagesToAverage->setValue(0);
+    nImagesToAverage->setSingleStep(500);
+
+    hbox->addWidget(nImagesToAverage);
     layout->addWidget(m_label);
     logScale->setChecked(true);
     connect(logScale,SIGNAL(setChecked(bool)),this,SLOT(setLogScale(bool)));
+    connect(nImagesToAverage,SIGNAL(valueChanged(int)),this,SLOT(changeImagesToAverage(int)));
     connect(maxSlider,SIGNAL(sliderReleased()),this,SLOT(changeMax()));
     connect(minSlider,SIGNAL(sliderReleased()),this,SLOT(changeMin()));
     m_pp = pp;
