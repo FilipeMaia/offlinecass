@@ -29,7 +29,7 @@ public:
 	    outputHitsToFile = false;
 	    onlyAnalyzeGivenHits = false;
 	    justIntegrateImages = false;
-	    outputAllEvents = false;
+	    outputAllEvents = true;
 	    useSignalMask[0] = false;
 	    useSignalMask[1] = false;
 	    skipPeriod = 1;

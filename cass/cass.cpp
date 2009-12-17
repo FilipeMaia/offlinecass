@@ -32,7 +32,7 @@ void parseOptions(int argc, char ** argv){
     -c: Threshold above which to integrate signal\n\
     -C: Max threshold below which the signal is integrate\n\
     -F: Integration floor\n\
-    -a: Output all pnCCD events regardless of signal\n\
+    -g: Only output good events\n\
     -m: Use the given mask for CCD 0 when calculating signal metrics\n\
     -M: Use the given mask for CCD 1 when calculating signal metrics\n\
     -d: Discard CCD 0\n\
@@ -43,15 +43,15 @@ void parseOptions(int argc, char ** argv){
     -G: Integrate images and display as we go\n\
     -h: print this text\n\
 ";
-  static char optstring[] = "x:l:sc:m:M:t:T:S:GadDIh";
+  static char optstring[] = "x:l:sc:m:M:t:T:S:GgdDIh";
   while(1){
     c = getopt(argc,argv,optstring);
     if(c == -1){
       break;
     }
     switch(c){
-    case 'a':
-	cass::globalOptions.outputAllEvents = true;
+    case 'g':
+	cass::globalOptions.outputAllEvents = false;
 	break;
     case 's':
 	cass::globalOptions.justIntegrateImages = true;
