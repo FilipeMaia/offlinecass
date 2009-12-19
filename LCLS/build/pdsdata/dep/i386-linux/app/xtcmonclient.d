@@ -1,1 +1,0 @@
-/reg/neh/home/barty/offlinecass/LCLS/build/pdsdata/obj/i386-linux/app/xtcmonclient.o /reg/neh/home/barty/offlinecass/LCLS/build/pdsdata/dep/i386-linux/app/xtcmonclient.d: xtcmonclient.cc XtcMonitorClient.hh
