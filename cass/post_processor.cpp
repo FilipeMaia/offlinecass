@@ -24,6 +24,14 @@
 #include <QtGui/QLabel>
 #include <QtGui>
 
+#if H5_VERS_MAJOR < 2
+#if H5_VERS_MINOR < 8
+#define H5Dcreate1(A,B,C,D,E) H5Dcreate(A,B,C,D,E)
+#define H5Gcreate1(A,B,C) H5Gcreate(A,B,C)
+#define H5Lcreate_soft(A,B,C,D,E) 0
+#endif
+#endif
+
 
 /* 
  *	Routine to print out info about current XTC iteration.
