@@ -58,7 +58,7 @@ INCLUDEPATH +=  ./ \
 
 unix{
   macx{
-    QMAKE_LFLAGS +=-mmacosx-version-min=10.4
+    QMAKE_LFLAGS +=-mmacosx-version-min=10.5
   }
 QMAKE_LFLAGS += -Wl,-rpath,$$(LCLSSYSLIB)
 LIBS += -L../cass_remi -lcass_remi \
