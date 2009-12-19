@@ -2,7 +2,7 @@
 
 # Variables to change
 # The prefix where hdf5 was installed.
-setenv HDF5DIR /sw
+setenv HDF5DIR /usr
 
 # The rest of the script should not require changes as long as qmake is in the path
 
@@ -11,10 +11,13 @@ if ( ! -e $HDF5DIR/include/hdf5.h) then
 	exit 1
 endif
 
+if ( `uname -s` == "Linux") then
+set arch = `uname -m`-linux
+else
 set arch = `uname -m`-`uname -s`
+endif
 setenv LCLSSYSINCLUDE `pwd`/LCLS
 setenv LCLSSYSLIB `pwd`/LCLS/build/pdsdata/lib/$arch
-setenv DYLD_LIBRARY_PATH ${DYLD_LIBRARY_PATH}:$LCLSSYSLIB
 echo LCLSSYSINCLUDE set to $LCLSSYSINCLUDE
 echo LCLSSYSLIB set to $LCLSSYSLIB
 echo HDF5DIR set to $HDF5DIR

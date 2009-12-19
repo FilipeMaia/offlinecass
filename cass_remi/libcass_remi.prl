@@ -1,6 +1,0 @@
-QMAKE_PRL_BUILD_DIR = /Users/filipe/offlinecass/cass_remi
-QMAKE_PRO_INPUT = cass_remi.pro
-QMAKE_PRL_TARGET = libcass_remi.a
-QMAKE_PRL_CONFIG = include_source_dir lex yacc warn_on debug uic resources sdk rez qt warn_on app_bundle incremental global_init_link_order lib_version_first plugin_no_soname link_prl exceptions no_mocdepend debug stl qt_framework no_mocdepend static create_prl objective_c staticlib static moc thread
-QMAKE_PRL_VERSION = 1.0.0
-QMAKE_PRL_LIBS = -L/Library/Frameworks   
