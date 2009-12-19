@@ -30,7 +30,7 @@ CC  := gcc
 CXX := g++
 LD  := g++
 LX  := g++
-
+s
 LIBEXTNS := so
 DEPFLAGS := -MM
 DEFINES  += -fPIC -D_REENTRANT -D__pentium__ -Wall
@@ -56,7 +56,8 @@ CPPFLAGS :=
 CFLAGS   := -m32
 CXXFLAGS := $(CFLAGS)
 CASFLAGS := -x assembler-with-cpp -P $(CFLAGS)
-LDFLAGS  := -Wl,-rpath,@loader_path/../lib -dynamiclib -single_module -undefined dynamic_lookup -install_name @rpath -m32
+#LDFLAGS  := -Wl,-rpath,@loader_path/../lib -dynamiclib -single_module -undefined dynamic_lookup -install_name @rpath -m32
+LDFLAGS  := -Wl,-rpath,@loader_path/../lib -dynamiclib -single_module -undefined dynamic_lookup -m32
 LXFLAGS  := -m32
 else
 ifeq ($(tgt_cpu_family)-$(tgt_os),x86_64-Darwin)
@@ -74,7 +75,8 @@ CPPFLAGS :=
 CFLAGS   := -m64
 CXXFLAGS := $(CFLAGS)
 CASFLAGS := -x assembler-with-cpp -P $(CFLAGS)
-LDFLAGS  := -Wl,-rpath,@loader_path/../lib -dynamiclib -single_module -undefined dynamic_lookup -install_name @rpath -m64 
+#LDFLAGS  := -Wl,-rpath,@loader_path/../lib -dynamiclib -single_module -undefined dynamic_lookup -install_name @rpath -m64 
+LDFLAGS  := -Wl,-rpath,@loader_path/../lib -dynamiclib -single_module -undefined dynamic_lookup  -m64 
 LXFLAGS  := -m64
 else
 ifeq ($(tgt_cpu_family),x86_64)

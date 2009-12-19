@@ -2,6 +2,9 @@
 qt += core gui
 #CONFIG += static release
 CONFIG += static debug
+macx{
+  CONFIG -= app_bundle
+}
 TEMPLATE = app
 TARGET = cass
 DEFINES += CASS_LIBRARY
