@@ -52,7 +52,7 @@ INCLUDEPATH +=  ./ \
                 ../cass_pnccd/pnccd_lib \
                 ../cass_machinedata \
                 ../cass_machinedata/classes/event \
-                ../../../barty/hdf5/include
+                $$(HDF5DIR)/include
 
 
 
@@ -62,7 +62,7 @@ LIBS += -L../cass_remi -lcass_remi \
         -L../cass_pnccd -lcass_pnccd \
         -L../cass_vmi -lcass_vmi \
         -L../cass_machinedata -lcass_machinedata \
-        -L../../../barty/hdf5/lib -lhdf5 \
+        -L$$(HDF5DIR)/lib -lhdf5 \
         -L$$(LCLSSYSLIB) -lacqdata -lxtcdata -lpulnixdata -lcamdata -lpnccddata \
 
 TARGETDEPS +=   ../cass_remi/libcass_remi.a \
