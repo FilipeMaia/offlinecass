@@ -182,7 +182,7 @@ int main(int argc, char **argv)
   // create format converter object
   cass::Ratemeter *ratemeter(new cass::Ratemeter());
   // create a dialog object
-  cass::Window * window(new cass::Window());
+//  cass::Window * window(new cass::Window());
 
   if(cass::globalOptions.displayIntegration){
       QTimer * timer = new QTimer;
@@ -193,14 +193,14 @@ int main(int argc, char **argv)
   }
 
   //when the quit button has been pushed we want to close the application//
-  QObject::connect(window, SIGNAL(quit()), input, SLOT(end()));
+//  QObject::connect(window, SIGNAL(quit()), input, SLOT(end()));
   
   // when the thread has finished, we want to close this application
   QObject::connect(input, SIGNAL(finished()), worker, SLOT(end()));
-  QObject::connect(worker, SIGNAL(finished()), window, SLOT(close()));
+  QObject::connect(worker, SIGNAL(finished()), &app, SLOT(quit()));
 
   //show dialog//
-  window->show();
+//  window->show();
 
   // start file input thread
   input->start();
@@ -212,7 +212,7 @@ int main(int argc, char **argv)
   int retval(app.exec());
   
   // clean up
-  delete window;
+//  delete window;
   delete ratemeter;
   delete worker;
   delete input;
