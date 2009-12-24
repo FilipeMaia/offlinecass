@@ -1,7 +1,7 @@
 // Copyright (C) 2009 Jochen Küpper,lmf
 
 #include <iostream>
-#include <QtGui/QApplication>
+#include <QCoreApplication>
 
 #include "cass.h"
 #include "cass_event.h"
@@ -14,7 +14,6 @@
 #include "worker.h"
 #include "post_processor.h"
 #include <unistd.h>
-#include <QtGui>
 
 namespace cass{
 cass::CommandLineOptions globalOptions;
@@ -121,6 +120,7 @@ void parseOptions(int argc, char ** argv){
   }
 }
 
+/*
 cass::DisplayWidget::DisplayWidget(cass::PostProcessor * pp){
     QVBoxLayout * layout = new QVBoxLayout(this);
     QHBoxLayout * hbox = new QHBoxLayout(this);
@@ -162,11 +162,12 @@ void cass::DisplayWidget::update(){
     m_label->setPixmap(QPixmap::fromImage(m_pp->integratedImage.toQImage(1,maxModifier,
 									 minModifier,logScale->checkState() == Qt::Checked)));
 }
+*/
 
 int main(int argc, char **argv)
 {
   // construct Qt application object
-  QApplication app(argc, argv);
+  QCoreApplication app(argc, argv);
 
   //
   const char *filelistname = "filesToProcess.txt";
@@ -184,13 +185,13 @@ int main(int argc, char **argv)
   // create a dialog object
 //  cass::Window * window(new cass::Window());
 
-  if(cass::globalOptions.displayIntegration){
+/*  if(cass::globalOptions.displayIntegration){
       QTimer * timer = new QTimer;
       timer->start(1000);
       cass::DisplayWidget * display = new cass::DisplayWidget(worker->_postprocessor);
       display->show();
       QObject::connect(timer, SIGNAL(timeout()), display, SLOT(update()));    
-  }
+}*/
 
   //when the quit button has been pushed we want to close the application//
 //  QObject::connect(window, SIGNAL(quit()), input, SLOT(end()));

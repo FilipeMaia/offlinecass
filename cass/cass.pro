@@ -1,5 +1,5 @@
 # Copyright (C) 2009 jk, ncoppola, lmf
-qt += core gui
+qt += core
 #CONFIG += static release
 CONFIG += static debug
 macx{

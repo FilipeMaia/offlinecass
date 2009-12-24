@@ -71,7 +71,8 @@ public:
 
 extern cass::CommandLineOptions globalOptions;
 
-class DisplayWidget: public QWidget{
+
+/*class DisplayWidget: public QWidget{
     Q_OBJECT
 public:
     DisplayWidget(PostProcessor * pp);
@@ -99,7 +100,7 @@ private:
     QSpinBox * nImagesToAverage;
 };
 
-
+*/
 
 
 }
