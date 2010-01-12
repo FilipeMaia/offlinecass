@@ -124,7 +124,9 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   time_t eventTime = datagram->seq.clock().seconds();
   //		time_t eventTimeNs = datagram->seq.clock().nanoseconds();
   int32_t eventFiducial = datagram->seq.stamp().fiducials();
+  setenv("TZ","US/Pacific",1);
   struct tm *timeinfo=localtime( &eventTime );
+  unsetenv("TZ");
   strftime(buffer,80,"LCLS_%Y_%b%d_%H%M%S",timeinfo);
   sprintf(outfile,"%s_%i_pnCCD.h5",buffer,eventFiducial);
   if(QFile::exists(outfile)){
@@ -411,7 +413,9 @@ long long cass::PostProcessor::integrateImage(cass::CASSEvent &cassevent, float 
   time_t eventTime = datagram->seq.clock().seconds();
   //		time_t eventTimeNs = datagram->seq.clock().nanoseconds();
   int32_t eventFiducial = datagram->seq.stamp().fiducials();
+  setenv("TZ","US/Pacific",1);
   struct tm *timeinfo=localtime( &eventTime );
+  unsetenv("TZ");
   char buffer[1024];
   char outfile[1024];
   strftime(buffer,80,"LCLS_%Y_%b%d_%H%M%S",timeinfo);
@@ -451,7 +455,9 @@ double cass::PostProcessor::stdDevImage(cass::CASSEvent &cassevent,long long int
   time_t eventTime = datagram->seq.clock().seconds();
   //		time_t eventTimeNs = datagram->seq.clock().nanoseconds();
   int32_t eventFiducial = datagram->seq.stamp().fiducials();
+  setenv("TZ","US/Pacific",1);
   struct tm *timeinfo=localtime( &eventTime );
+  unsetenv("TZ");
   char buffer[1024];
   char outfile[1024];
   strftime(buffer,80,"LCLS_%Y_%b%d_%H%M%S",timeinfo);
