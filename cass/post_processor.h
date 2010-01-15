@@ -55,6 +55,7 @@ namespace cass
 	}
 
     public:
+	static double calculateWavelength(cass::CASSEvent &cassevent);
       void postProcess(CASSEvent&);
       void integrateByQ(CASSEvent&);
       void finishProcessing(){
@@ -74,6 +75,7 @@ namespace cass
       bool isGoodImage(cass::CASSEvent &cassevent);
       void addToIntegratedImage(cass::CASSEvent &cassevent);
       bool firstIntegratedImage;
+      void appendWavelength(cass::CASSEvent &cassevent);
       QWidget * integrationDisplay;
       QLabel * labelDisplay;
   };

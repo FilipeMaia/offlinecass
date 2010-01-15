@@ -25,7 +25,7 @@ namespace cass
       ~FormatConverter();
 
     public:
-      enum Converters {pnCCD, REMI, Pulnix, MachineData};
+      enum Converters {pnCCD, REMI, Pulnix,MachineData};
       bool processDatagram(cass::CASSEvent*);
 
     private:

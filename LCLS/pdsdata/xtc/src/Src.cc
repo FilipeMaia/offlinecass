@@ -4,7 +4,7 @@
 
 using namespace Pds;
 
-Src::Src() : _log(-1UL), _phy(-1UL) {}
+Src::Src() : _log(-1L), _phy(-1L) {}
 Src::Src(Level::Type level) {
   uint32_t temp = (uint32_t)level;
   _log=(temp&0xff)<<24;

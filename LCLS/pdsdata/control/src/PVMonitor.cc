@@ -4,7 +4,17 @@
 
 using namespace Pds::ControlData;
 
+static const uint32_t NoArray=-1UL;
+
 PVMonitor::PVMonitor() {}
+
+PVMonitor::PVMonitor(const char* pvname, double loValue, double hiValue) :
+  _index  (NoArray),
+  _loValue(loValue),
+  _hiValue(hiValue)
+{
+  strncpy(_name, pvname, NameSize);
+}
 
 PVMonitor::PVMonitor(const char* pvname, unsigned index, double loValue, double hiValue) :
   _index  (index  ),
@@ -31,6 +41,8 @@ bool PVMonitor::operator<(const PVMonitor& m) const
 }
 
 const char* PVMonitor::name() const { return _name; }
+
+bool PVMonitor::array() const { return _index!=NoArray; }
 
 unsigned PVMonitor::index() const { return _index; }
 

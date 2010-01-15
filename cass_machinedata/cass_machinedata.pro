@@ -1,6 +1,6 @@
 # Copyright (C) 2009 Jochen Küpper,lmf
 
-CONFIG += static 
+CONFIG += static debug
 QT -= core gui
 TEMPLATE = lib
 TARGET = cass_machinedata

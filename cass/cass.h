@@ -41,6 +41,7 @@ public:
 	    useIntegrationCeiling = false;
 	    useIntegrationFloor = false;
 	    nImagesToAverage = 0;
+	    onlyAppendWavelength = false;
 	}
     bool outputHitsToFile;
     QString hitsOutputFile;
@@ -66,6 +67,8 @@ public:
     float integrationFloor;
     bool useIntegrationFloor;
     int nImagesToAverage;
+  bool onlyAppendWavelength;
+  
 };
 
 

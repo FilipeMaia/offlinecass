@@ -33,7 +33,7 @@ void cass::REMI::Converter::operator()(const Pds::Xtc* xtc, cass::CASSEvent* cas
                     case 1:
           {
             //get the config//
-            const Pds::Acqiris::ConfigV1 &config = *reinterpret_cast<const Pds::Acqiris::ConfigV1*>(xtc->payload());
+            config = *reinterpret_cast<const Pds::Acqiris::ConfigV1*>(xtc->payload());
             //clear the stored event//
             _storedEvent.channels().clear();
             _storedEvent.detectors().clear();
@@ -99,13 +99,14 @@ void cass::REMI::Converter::operator()(const Pds::Xtc* xtc, cass::CASSEvent* cas
           Pds::Acqiris::DataDescV1 *dd = const_cast<Pds::Acqiris::DataDescV1*>(&datadesc); //this is a hack that is needed because of the Datalayout in the xtc
           for (size_t ic=0;ic<remievent.channels().size();++ic)
           {
-            const Pds::Acqiris::DataDescV1 &ddesc = *dd;
+            Pds::Acqiris::DataDescV1 &ddesc = *dd;
             //extract the vertical gain, that allows one to convert points from ADC Bytes to Volts (milli Volts)
-            remievent.channels()[ic].gain() = ddesc.gain()*1000;
+	    /* FM: gain no longer available */
+	    //	    remievent.channels()[ic].gain() = ddesc.gain()*1000;
             //extact the horizontal position of the first point with respect to the trigger//
-            remievent.channels()[ic].horpos() = ddesc.timestamp(0).horPos();
+            remievent.channels()[ic].horpos() = ddesc.timestamp(0).pos();
             //extract waveform//
-            const short* waveform = ddesc.waveform();
+            const short* waveform = ddesc.waveform(config.horiz());
             //we need to shift the pointer so that it looks at the first real point of the waveform//
             waveform += ddesc.indexFirstPoint();
             //resize the waveform vector to hold all the entries of the waveform//
@@ -115,7 +116,7 @@ void cass::REMI::Converter::operator()(const Pds::Xtc* xtc, cass::CASSEvent* cas
               remievent.channels()[ic].waveform()[iw] = (waveform[iw]&0x00ff<<8) | (waveform[iw]&0xff00>>8);
 
             //change to the next Channel//
-            dd = dd->nextChannel();
+            dd = dd->nextChannel(config.horiz());
           }
         }
       }

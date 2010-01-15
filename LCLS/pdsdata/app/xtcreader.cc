@@ -14,6 +14,9 @@
 #include "pdsdata/camera/TwoDGaussianV1.hh"
 #include "pdsdata/evr/ConfigV1.hh"
 #include "pdsdata/opal1k/ConfigV1.hh"
+#include "pdsdata/epics/EpicsPvData.hh"
+#include "pdsdata/epics/EpicsXtcSettings.hh"
+#include "pdsdata/bld/bldData.hh"
 
 class myLevelIter : public XtcIterator {
 public:
@@ -41,6 +44,32 @@ public:
   void process(const DetInfo&, const Camera::TwoDGaussianV1& o) {
     printf("*** Processing 2DGauss object\n");
   }
+  void process(const DetInfo&, const EpicsPvHeader& epicsPv)
+  {    
+    printf("*** Processing Epics object\n");
+    epicsPv.printPv();
+    printf( "\n" );
+  }    
+  void process(const DetInfo&, const BldDataFEEGasDetEnergy& bldData) {
+    printf("*** Processing FEEGasDetEnergy object\n");
+    bldData.print();
+    printf( "\n" );    
+  }  
+  void process(const DetInfo&, const BldDataEBeamV0& bldData) {
+    printf("*** Processing EBeamV0 object\n");
+    bldData.print();
+    printf( "\n" );    
+  }  
+  void process(const DetInfo&, const BldDataEBeam& bldData) {
+    printf("*** Processing EBeam object\n");
+    bldData.print();
+    printf( "\n" );    
+  }  
+  void process(const DetInfo&, const BldDataPhaseCavity& bldData) {
+    printf("*** Processing PhaseCavity object\n");
+    bldData.print();
+    printf( "\n" );    
+  }  
   int process(Xtc* xtc) {
     unsigned i=_depth; while (i--) printf("  ");
     Level::Type level = xtc->src.level();
@@ -54,6 +83,11 @@ public:
       ProcInfo& info = *(ProcInfo*)(&xtc->src);
       printf("IpAddress 0x%x ProcessId 0x%x\n",info.ipAddr(),info.processId());
     }
+    if (level < 0 || level >= Level::NumberOfLevels )
+    {
+        printf("Unsupported Level %d\n", (int) level);
+        return Continue;
+    }    
     switch (xtc->contains.id()) {
     case (TypeId::Id_Xtc) : {
       myLevelIter iter(xtc,_depth+1);
@@ -67,18 +101,18 @@ public:
       process(info, *(const Acqiris::DataDescV1*)(xtc->payload()));
       break;
     case (TypeId::Id_AcqConfig) :
-      {      
-	unsigned version = xtc->contains.version();
-	switch (version) {
-	case 1:
-	  process(info,*(const Acqiris::ConfigV1*)(xtc->payload()));
-	  break;
-	default:
-	  printf("Unsupported acqiris configuration version %d\n",version);
-	  break;
-	}
+    {      
+      unsigned version = xtc->contains.version();
+      switch (version) {
+      case 1:
+        process(info,*(const Acqiris::ConfigV1*)(xtc->payload()));
+        break;
+      default:
+        printf("Unsupported acqiris configuration version %d\n",version);
+        break;
       }
-      break;
+      break;      
+    }
     case (TypeId::Id_TwoDGaussian) :
       process(info, *(const Camera::TwoDGaussianV1*)(xtc->payload()));
       break;
@@ -91,7 +125,42 @@ public:
     case (TypeId::Id_EvrConfig) :
       process(info, *(const EvrData::ConfigV1*)(xtc->payload()));
       break;
+    case (TypeId::Id_Epics) :      
+    {
+      int iVersion = xtc->contains.version();
+      if ( iVersion != EpicsXtcSettings::iXtcVersion ) 
+      {
+          printf( "Xtc Epics version (%d) is not compatible with reader supported version (%d)", iVersion, EpicsXtcSettings::iXtcVersion );
+          break;
+      }
+      process(info, *(const EpicsPvHeader*)(xtc->payload()));
+      break;
+    }            
+    case (TypeId::Id_FEEGasDetEnergy) :
+    {
+      process(info, *(const BldDataFEEGasDetEnergy*) xtc->payload() );
+      break;        
+    }
+    case (TypeId::Id_EBeam) :
+    {
+      switch(xtc->contains.version()) {
+      case 0:
+	process(info, *(const BldDataEBeamV0*) xtc->payload() );
+	break; 
+      case 1:
+	process(info, *(const BldDataEBeam*) xtc->payload() );
+	break; 
+      default:
+	break;
+      }       
+    }    
+    case (TypeId::Id_PhaseCavity) :
+    {
+      process(info, *(const BldDataPhaseCavity*) xtc->payload() );
+      break;        
+    }
     default :
+      printf("Unsupported TypeId %d\n", (int) xtc->contains.id());
       break;
     }
     return Continue;

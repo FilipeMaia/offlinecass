@@ -2,7 +2,7 @@
 
 # Variables to change
 # The prefix where hdf5 was installed.
-setenv HDF5DIR /sw
+setenv HDF5DIR /usr
 
 # The rest of the script should not require changes as long as qmake is in the path
 

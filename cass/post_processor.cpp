@@ -59,6 +59,7 @@ void postProcess_printinfo(cass::CASSEvent &cassevent) {
 		printf("Time = %s", ctime(&eventTime));
 		printf("casseventID = 0x%lX, fiducial = %i\n", cassevent.id(), eventFiducial);
 		printf("energy = %f\t%f\n",cassevent.MachineDataEvent().energy(), cassevent.MachineDataEvent().EbeamCharge());
+		printf("wavelength = %f\n",cass::PostProcessor::calculateWavelength(cassevent));
 
  
 	// Information on pnCCD frames
@@ -307,6 +308,11 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &cassevent.MachineDataEvent().EbeamCharge() );
   H5Dclose(dataset_id);
   
+    dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/wavelength", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  double wavelength = cass::PostProcessor::calculateWavelength(cassevent);
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &wavelength);
+  H5Dclose(dataset_id);
+  
   H5Sclose(dataspace_id);
   
   // Strings are a little tricky --> this could be improved!
@@ -331,6 +337,10 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
  */
 void cass::PostProcessor::postProcess(cass::CASSEvent &cassevent)
 {
+  if(globalOptions.onlyAppendWavelength){
+    appendWavelength(cassevent);
+    return;
+  }
   Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent.datagrambuffer());
   time_t eventTime = datagram->seq.clock().seconds();
   if(cass::globalOptions.startTime.isValid()){
@@ -360,6 +370,8 @@ void cass::PostProcessor::postProcess(cass::CASSEvent &cassevent)
 
   postProcess_printinfo(cassevent);
   
+  calculateWavelength(cassevent);
+
   if(cass::globalOptions.outputAllEvents || isGoodImage(cassevent)){	  
     //	  integrateByQ(cassevent);
     //	  extractEnergy(cassevent);
@@ -375,6 +387,72 @@ void cass::PostProcessor::postProcess(cass::CASSEvent &cassevent)
     }
   }
   printf("\n");
+}
+
+void cass::PostProcessor::appendWavelength(cass::CASSEvent &cassevent){
+  double wavelength = calculateWavelength(cassevent);
+
+	/*
+	 *	Simply return if there are no CCD frames!
+	 */
+  int nframes = cassevent.pnCCDEvent().detectors().size();
+  /*  if (nframes == 0) {
+    printf("No pnCCD frames in this event:  skipping wavelength append step...\n");
+        return;
+	}*/
+  
+  
+  /*
+   *	Create filename based on date, time and LCLS fiducial for this image
+   */
+  char outfile[1024];
+  char buffer[1024];
+  Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent.datagrambuffer());
+  time_t eventTime = datagram->seq.clock().seconds();
+  //		time_t eventTimeNs = datagram->seq.clock().nanoseconds();
+  int32_t eventFiducial = datagram->seq.stamp().fiducials();
+  setenv("TZ","US/Pacific",1);
+  struct tm *timeinfo=localtime( &eventTime );
+  unsetenv("TZ");
+  strftime(buffer,80,"LCLS_%Y_%b%d_%H%M%S",timeinfo);
+  sprintf(outfile,"%s_%i_pnCCD.h5",buffer,eventFiducial);
+  if(!QFile::exists(outfile)){
+    //    printf("File %s does not exist!\n",outfile);
+    return;
+  }
+  hid_t hdf_fileID = H5Fopen(outfile,  H5F_ACC_RDWR, H5P_DEFAULT);
+  hsize_t dims = 1;
+  hid_t dataspace_id = H5Screate_simple( 1, &dims, NULL );
+  hid_t dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/wavelength", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &wavelength);
+  H5Dclose(dataset_id);
+  H5close();  
+}
+
+
+double cass::PostProcessor::calculateWavelength(cass::CASSEvent &cassevent){
+  /* 
+ 
+     Let's try to calculate the resonant photon energy, without any energy loss corrections.  
+     First try the simple expression in e.g. Ayvazyan, V. et al. (2005). This expression requires
+     1) electron energy (in the xtc files)
+     2) undulator period (~3cm for LCLS)
+     3) undulator K (~3.5 at the LCLS)
+     
+  */
+  
+  const double   ebEnergy = cassevent.MachineDataEvent().EbeamL3Energy();
+  if(!ebEnergy){
+    return NAN;
+  }
+  const double   K = 3.5;  // K of the undulator (provided by Marc Messerschmidt)
+  const double   lambda = 3.0e7; // LCLS undulator period in nm
+  const double   hc = 1239.84172; // in eV*nm
+  double gamma = ebEnergy/(0.510998903);  // electron energy in rest mass units (E/mc^2)
+  double resonantPhotonEnergy = hc*2*gamma*gamma/(lambda*(1+K*K/2)); // resonant photon 
+                                         // wavelength in same units as undulator period)
+  //  printf("Resonant photon energy, Rick's calculation, no energy loss corrections: %g eV\n",resonantPhotonEnergy);
+  return 1e10*1.98644e-25/(resonantPhotonEnergy*1.602176e-19);
 }
 
 bool cass::PostProcessor::isGoodImage(cass::CASSEvent &cassevent){

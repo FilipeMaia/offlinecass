@@ -14,15 +14,17 @@
 #include "pdsdata/camera/TwoDGaussianV1.hh"
 #include "pdsdata/evr/ConfigV1.hh"
 #include "pdsdata/opal1k/ConfigV1.hh"
-#include "pdsdata/pnCCD/fformat.h"
+#include "pdsdata/pnCCD/FrameV1.hh"
+#include "pdsdata/pnCCD/ConfigV1.hh"
 
 #include "XtcMonitorClient.hh"
+
+static PNCCD::ConfigV1 cfg;
 
 class myLevelIter : public XtcIterator {
 public:
   enum {Stop, Continue};
   myLevelIter(Xtc* xtc, unsigned depth) : XtcIterator(xtc), _depth(depth) {}
-  fileHeaderType fileHdrBuffer[1024];
 
   void process(const DetInfo& d, const Camera::FrameV1& f) {
     printf("*** Processing frame object\n");
@@ -45,26 +47,33 @@ public:
   void process(const DetInfo&, const Camera::TwoDGaussianV1& o) {
     printf("*** Processing 2DGauss object\n");
   }
-  void process(const DetInfo& di, fileHeaderType* FileHdr) {
-    printf("*** Processing pnCCD config\n");
-    printf("\tpnCCD File Header:\n");
-    printf("\tmyLength  %d, fhLength %d, nCCDs %d, width %d, maxHeight %d, version %d\n\t dataSetID %s\n", 
-			FileHdr->myLength, FileHdr->fhLength, FileHdr->nCCDs, FileHdr->width, 
-			FileHdr->maxHeight, FileHdr->version, FileHdr->dataSetID);
-    if (FileHdr->version > 5) {
-      printf("\tthe_width %d, the_maxHeight %d\n", FileHdr->the_width, FileHdr->the_maxHeight);
-    }
-    memcpy((char*)fileHdrBuffer, (char*)FileHdr, 1024);
+  void process(const DetInfo&, const PNCCD::ConfigV1& config) {
+    cfg = config;
+    printf("*** Processing pnCCD config.  Number of Links: %d, PayloadSize per Link: %d\n",
+           cfg.numLinks(),cfg.payloadSizePerLink());
   }
-  void process(const DetInfo& di, frameHeaderType* frh) {
-    printf("*** Processing pnCCD frame data\n");
-    printf("\tpnCCD Frame Header:\n");
-    printf("\tstart %d, info %d, id %d, height %d, tv_sec %d, tv_usec %d, index %d, temp %lf\n", 
-			frh->start, frh->info, frh->id, frh->height, 
-			frh->tv_sec, frh->tv_usec, frh->index, frh->temp);
-    if (fileHdrBuffer->version > 5) {
-      printf("\tthe_start %d, the_height %d, external_id %d, aux_value %lf\n", 
-			frh->the_start, frh->the_height, frh->external_id, frh->aux_value);
+//   void process(const DetInfo& di, PnccdFrameHeaderType* frh) {
+//     enum {numberOfLinks=4, payloadPerLink=(1<<19)+16};
+//     uint8_t* pb = reinterpret_cast<uint8_t*>(frh);
+//     PnccdFrameHeaderType* fp;
+//     for (uint32_t i=0; i<numberOfLinks; i++) {
+//       fp = reinterpret_cast<PnccdFrameHeaderType*>(pb);
+//       printf("\tpnCCD frame: %08X %08X %08X %08X\n", fp->specialWord, fp->frameNumber,
+//           fp->TimeStampHi, fp->TimeStampLo);
+//       unsigned* pu = (unsigned*)(fp+1);
+//       printf("\tdata begins: %08X %08X %08X %08X %08X\n", pu[0], pu[1], pu[2], pu[3], pu[4]);
+//       pb += payloadPerLink;
+//     }
+//   }
+  void process(const DetInfo& d, const PNCCD::FrameV1& f) {
+    for (unsigned i=0;i<cfg.numLinks();i++) {
+      printf("*** Processing pnCCD frame number %x segment %d\n",f.frameNumber(),i);
+      printf("\tpnCCD frameHeader: %08X, %08X, %08X, %08X\n", f.specialWord(), f.frameNumber(),
+          f.timeStampHi(), f.timeStampLo());
+      const uint16_t* data = f.data();
+      unsigned last  = f.sizeofData(cfg); 
+      printf("First data words: 0x%4.4x 0x%4.4x\n",data[0],data[1]);
+      printf("Last  data words: 0x%4.4x 0x%4.4x\n",data[last-2],data[last-1]);
     }
   }
   int process(Xtc* xtc) {
@@ -73,13 +82,17 @@ public:
     printf("%s level contains: %s: ",Level::name(level), TypeId::name(xtc->contains.id()));
     const DetInfo& info = *(DetInfo*)(&xtc->src);
     if (level==Level::Source) {
-      printf("%s %d %s %d\n",
+      printf("%s %d %s %d",
              DetInfo::name(info.detector()),info.detId(),
              DetInfo::name(info.device()),info.devId());
     } else {
       ProcInfo& info = *(ProcInfo*)(&xtc->src);
-      printf("IpAddress 0x%x ProcessId 0x%x\n",info.ipAddr(),info.processId());
+      printf("IpAddress 0x%x ProcessId 0x%x",info.ipAddr(),info.processId());
     }
+    if (xtc->damage.value()) {
+      printf(", damage 0x%x", xtc->damage.value());
+    }
+    printf("\n");
     switch (xtc->contains.id()) {
     case (TypeId::Id_Xtc) : {
       myLevelIter iter(xtc,_depth+1);
@@ -117,12 +130,18 @@ public:
     case (TypeId::Id_EvrConfig) :
       process(info, *(const EvrData::ConfigV1*)(xtc->payload()));
       break;
-    case (TypeId::Id_pnCCDconfig) :
-      process(info, (fileHeaderType*) xtc->payload());
-      break;
     case (TypeId::Id_pnCCDframe) :
-      process(info, (frameHeaderType*) xtc->payload());
+      process(info, *(const PNCCD::FrameV1*)(xtc->payload()));
       break;
+    case (TypeId::Id_pnCCDconfig) :
+      process(info, *(const PNCCD::ConfigV1*)(xtc->payload()));
+      break;
+//     case (TypeId::Id_pnCCDconfig) :
+//       process(info, (fileHeaderType*) xtc->payload());
+//       break;
+//     case (TypeId::Id_pnCCDframe) :
+//       process(info, (PnccdFrameHeaderType*) xtc->payload());
+//       break;
     default :
       break;
     }
@@ -136,12 +155,11 @@ class MyXtcMonitorClient : public XtcMonitorClient {
   public:
     MyXtcMonitorClient() {
     }
-    virtual int processDgram(Dgram* dg) {
+    virtual void processDgram(Dgram* dg) {
       printf("%s transition: time 0x%x/0x%x, payloadSize 0x%x, damage 0x%x\n",TransitionId::name(dg->seq.service()),
 	     dg->seq.stamp().fiducials(),dg->seq.stamp().ticks(),dg->xtc.sizeofPayload(), dg->xtc.damage.value());
       myLevelIter iter(&(dg->xtc),0);
       iter.iterate();
-      return 0;
     };
 };
 

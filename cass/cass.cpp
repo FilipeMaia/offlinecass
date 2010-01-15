@@ -40,9 +40,10 @@ void parseOptions(int argc, char ** argv){
     -T: End time for conversion\n\
     -S: Only look at every nth frame\n\
     -G: Integrate images and display as we go\n\
+    -w: Only append wavelength information to already existing files\n\
     -h: print this text\n\
 ";
-  static char optstring[] = "x:l:sc:m:M:t:T:S:GgdDIh";
+  static char optstring[] = "x:l:sc:m:M:t:T:S:GgdDIwh";
   while(1){
     c = getopt(argc,argv,optstring);
     if(c == -1){
@@ -109,6 +110,9 @@ void parseOptions(int argc, char ** argv){
       break;
     case 'G':
 	cass::globalOptions.displayIntegration = true;
+      break;
+    case 'w':
+	cass::globalOptions.onlyAppendWavelength = true;
       break;
     case 'h':
       printf("%s",help_text);

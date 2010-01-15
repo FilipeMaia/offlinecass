@@ -16,7 +16,9 @@ cass::FormatConverter::FormatConverter()
     // create all the necessary individual format converters
 //  _converters[REMI]        = new cass::REMI::Converter();
 //  _converters[Pulnix]      = new cass::VMI::Converter();
-  _converters[pnCCD]       = new cass::pnCCD::Converter();
+    if(globalOptions.onlyAppendWavelength == false){
+	_converters[pnCCD]       = new cass::pnCCD::Converter();
+    }
   _converters[MachineData] = new cass::MachineData::Converter();
 }
 

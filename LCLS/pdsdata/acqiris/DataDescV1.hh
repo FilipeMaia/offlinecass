@@ -39,9 +39,9 @@ namespace Pds {
 
     class TimestampV1 {
     public:
+      double   pos  () const;
       uint64_t value() const;
       uint64_t operator-(const TimestampV1& ts) const;
-      double   horPos() const;
     private:
       // this is a copy of AqSegmentDescriptor in AcqirisDataTypes.h
       // to break dependencies with acqiris software.  Note that if
@@ -55,13 +55,10 @@ namespace Pds {
     public:
       uint32_t nbrSamplesInSeg() const;
       uint32_t nbrSegments() const;
-      TimestampV1& timestamp(uint32_t seg) const;
+      TimestampV1& timestamp(uint32_t seg);
       int16_t* waveform(const HorizV1& hconfig);
-      const int16_t* waveform()const;
-      uint32_t indexFirstPoint()const;
-      double gain()const {return _vGain;}
+      uint32_t indexFirstPoint();
       DataDescV1* nextChannel(const HorizV1& hconfig);
-      DataDescV1* nextChannel();
 
       static uint32_t timestampSize(const HorizV1& hconfig);
       static uint32_t waveformSize(const HorizV1& hconfig);
@@ -73,11 +70,11 @@ namespace Pds {
       // extra space required by Acqiris DMA engine.  may need
       // to change if readmode changes.
       static const uint32_t _extra=32*sizeof(short);
-      TimestampV1* _timestamp()const;
+      TimestampV1* _timestamp();
 
       // this is a copy of AqDataDescriptor in AcqirisDataTypes.h
       // to break dependencies with acqiris software.
-      uint32_t _returnedSamplesPerSeg;//Total number of data samples actually returned. DataArray[indexFirstPoint]… DataArray[indexFirstPoint+ returnedSamplesPerSeg-1]
+      uint32_t _returnedSamplesPerSeg;
       uint32_t _indexFirstPoint; // indexFirstPoint is the first valid point. 
       //!< Note: Not valid for 'readMode = ReadModeSeqRawW'.
       double   _sampTime;
