@@ -57,7 +57,7 @@ void postProcess_printinfo(cass::CASSEvent &cassevent) {
 
 	// Print information 
 		printf("Time = %s", ctime(&eventTime));
-		printf("casseventID = 0x%lX, fiducial = %i\n", cassevent.id(), eventFiducial);
+		printf("casseventID = 0x%llX, fiducial = %i\n", cassevent.id(), eventFiducial);
 		printf("energy = %f\t%f\n",cassevent.MachineDataEvent().energy(), cassevent.MachineDataEvent().EbeamCharge());
 		printf("wavelength = %f\n",cass::PostProcessor::calculateWavelength(cassevent));
 
@@ -308,10 +308,35 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &cassevent.MachineDataEvent().EbeamCharge() );
   H5Dclose(dataset_id);
   
-    dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/wavelength", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/photon_wavelength_A", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
   double wavelength = cass::PostProcessor::calculateWavelength(cassevent);
   H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &wavelength);
   H5Dclose(dataset_id);
+
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/photon_wavelength_nm", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  wavelength /= 10;
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &wavelength);
+  H5Dclose(dataset_id);
+
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/photon_energy_ev", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  double photon_energy_eV = 1240.7/wavelength;
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &photon_energy_eV);
+  H5Dclose(dataset_id);
+
+  const double ebEnergy = cassevent.MachineDataEvent().EbeamL3Energy();
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/EbeamL3Energy", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &ebEnergy);
+  H5Dclose(dataset_id);
+
+  
+  /* Try to write out the pulse length from the epics data*/
+
+  static const char* pvNamePulseDuration = "SIOC:SYS0:ML00:AO820";
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/pulse_length", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  double pulse_length = cassevent.MachineDataEvent().EpicsData()[pvNamePulseDuration];
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &pulse_length);
+  H5Dclose(dataset_id);
+  
   
   H5Sclose(dataspace_id);
   
@@ -395,7 +420,7 @@ void cass::PostProcessor::appendWavelength(cass::CASSEvent &cassevent){
 	/*
 	 *	Simply return if there are no CCD frames!
 	 */
-  int nframes = cassevent.pnCCDEvent().detectors().size();
+  //  int nframes = cassevent.pnCCDEvent().detectors().size();
   /*  if (nframes == 0) {
     printf("No pnCCD frames in this event:  skipping wavelength append step...\n");
         return;
@@ -970,11 +995,10 @@ namespace cass{
   
   unsigned char * HDRImage::sp_image_get_false_color(int frame,int color, double min, double max){
 
-    int i,x,y;
+    int i;
     double log_of_scale;
     sp_rgb color_table[256];
     double scale,offset,max_v,min_v,value;
-    double phase;
     unsigned char * out = new unsigned char[m_rows[frame]*m_columns[frame]*4];
   
   /*fclose(fp);
