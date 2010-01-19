@@ -55,26 +55,29 @@ void postProcess_printinfo(cass::CASSEvent &cassevent) {
 		int32_t eventFiducial = datagram->seq.stamp().fiducials();
 		
 
-	// Print information 
+	// This information is always printed 
 		printf("Time = %s", ctime(&eventTime));
-		printf("casseventID = 0x%llX, fiducial = %i\n", cassevent.id(), eventFiducial);
-		printf("energy = %f\t%f\n",cassevent.MachineDataEvent().energy(), cassevent.MachineDataEvent().EbeamCharge());
-		printf("wavelength = %f\n",cass::PostProcessor::calculateWavelength(cassevent));
-
+		printf("casseventID = 0x%lX, fiducial = %i\n", cassevent.id(), eventFiducial);
+		//printf("energy = %f\tEbeam charge = %f\n",cassevent.MachineDataEvent().energy(), cassevent.MachineDataEvent().EbeamCharge());
  
-	// Information on pnCCD frames
-		int nframes = cassevent.pnCCDEvent().detectors().size();
-		printf("nframes = %i\n",nframes);   
- 		//cassevent.pnCCDEvent().detectors()[0].correctedFrame().size());
- 		
- 		if (nframes >= 1) {
-	  		printf("CCD1, Size = %ix%i\n",cassevent.pnCCDEvent().detectors()[0].rows(),
-	  			cassevent.pnCCDEvent().detectors()[0].columns());
- 		}
- 		if (nframes == 2) {
-	  		printf("CCD2, Size = %ix%i\n",cassevent.pnCCDEvent().detectors()[1].rows(),
-	  			cassevent.pnCCDEvent().detectors()[1].columns());
- 		}
+ 
+	// This information printed only in verbose mode
+		if(cass::globalOptions.verbose) {
+			printf("wavelength = %f nm\n",cass::PostProcessor::calculateWavelength(cassevent));
+	
+			int nframes = cassevent.pnCCDEvent().detectors().size();
+			printf("nframes = %i\n",nframes);   
+			//cassevent.pnCCDEvent().detectors()[0].correctedFrame().size());
+			
+			if (nframes >= 1) {
+				printf("CCD1, Size = %ix%i\n",cassevent.pnCCDEvent().detectors()[0].rows(),
+					cassevent.pnCCDEvent().detectors()[0].columns());
+			}
+			if (nframes == 2) {
+				printf("CCD2, Size = %ix%i\n",cassevent.pnCCDEvent().detectors()[1].rows(),
+					cassevent.pnCCDEvent().detectors()[1].columns());
+			}
+		}
 }
 
 
@@ -123,16 +126,16 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   char buffer[1024];
   Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent.datagrambuffer());
   time_t eventTime = datagram->seq.clock().seconds();
-  //		time_t eventTimeNs = datagram->seq.clock().nanoseconds();
+  // time_t eventTimeNs = datagram->seq.clock().nanoseconds();
   int32_t eventFiducial = datagram->seq.stamp().fiducials();
   setenv("TZ","US/Pacific",1);
   struct tm *timeinfo=localtime( &eventTime );
   unsetenv("TZ");
   strftime(buffer,80,"LCLS_%Y_%b%d_%H%M%S",timeinfo);
   sprintf(outfile,"%s_%i_pnCCD.h5",buffer,eventFiducial);
-  if(QFile::exists(outfile)){
-    sprintf(outfile,"%s_%i_pnCCD-part2.h5",buffer,eventFiducial);
-  }
+  //if(QFile::exists(outfile)){
+  // sprintf(outfile,"%s_%i_pnCCD-part2.h5",buffer,eventFiducial);
+  //}
   printf("Writing data to: %s\n",outfile);
   
   
@@ -186,6 +189,7 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   // Save information on number of pnCCD frames saved
   dims[0] = 1;
   dataspace_id = H5Screate_simple( 1, dims, NULL );
+  //dataspace_id = H5Screate(H5S_SCALAR);
   int adjusted_nframes = nframes-skipped;
   dataset_id = H5Dcreate1(hdf_fileID, "/data/nframes", H5T_NATIVE_SHORT, dataspace_id, H5P_DEFAULT);
   H5Dwrite(dataset_id, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT,&adjusted_nframes );
@@ -204,6 +208,7 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   gid = H5Gcreate1(hdf_fileID,"pnCCD",0);
   dims[0] = 1;
   dataspace_id = H5Screate_simple( 1, dims, NULL );
+  //dataspace_id = H5Screate(H5S_SCALAR);
   
   dataset_id = H5Dcreate1(hdf_fileID, "/pnCCD/n_CCDs", H5T_NATIVE_SHORT, dataspace_id, H5P_DEFAULT);
   H5Dwrite(dataset_id, H5T_NATIVE_SHORT, H5S_ALL, H5S_ALL, H5P_DEFAULT,&nframes );
@@ -275,6 +280,7 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   gid = H5Gcreate1(hdf_fileID,"LCLS",0);
   dims[0] = 1;
   dataspace_id = H5Screate_simple( 1, dims, NULL );
+  //dataspace_id = H5Screate(H5S_SCALAR);
   
   dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/machineTime", H5T_NATIVE_UINT32, dataspace_id, H5P_DEFAULT);
   H5Dwrite(dataset_id, H5T_NATIVE_UINT32, H5S_ALL, H5S_ALL, H5P_DEFAULT, &eventTime );
@@ -286,6 +292,10 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   
   dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/energy", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
   H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &cassevent.MachineDataEvent().energy() );
+  H5Dclose(dataset_id);
+  
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/ebeamCharge", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &cassevent.MachineDataEvent().EbeamCharge() );
   H5Dclose(dataset_id);
   
 
@@ -302,54 +312,66 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/f_22_ENRC", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
   H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &cassevent.MachineDataEvent().f_22_ENRC() );
   H5Dclose(dataset_id);
+    
+    
+  /* 
+     Calculate the resonant photon energy (without any energy loss corrections)
+     Use the simple expression in e.g. Ayvazyan, V. et al. (2005). This expression requires
+     1) electron energy (in the xtc files)
+     2) undulator period (~3cm for LCLS)
+     3) undulator K (~3.5 at the LCLS)
+  */
+  double wavelength = cass::PostProcessor::calculateWavelength(cassevent);  
+  const double   K = 3.5;  // K of the undulator (provided by Marc Messerschmidt)
+  const double   lambda = 3.0e7; // LCLS undulator period in nm
+  const double   hc = 1239.84172; // in eV*nm
+  double resonantPhotonEnergy = -1; 
+  double wavelength_nm = -1; 
+  double wavelength_A = -1;
   
-  
-  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/ebeamCharge", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
-  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &cassevent.MachineDataEvent().EbeamCharge() );
+  const double   ebEnergy = cassevent.MachineDataEvent().EbeamL3Energy();
+  double gamma = ebEnergy/(0.510998903);  // electron energy in rest mass units (E/mc^2)
+  if(ebEnergy){
+	  resonantPhotonEnergy = hc*2*gamma*gamma/(lambda*(1+K*K/2)); // resonant photon wavelength in same units as undulator period)
+	  //  return 1e10*1.98644e-25/(resonantPhotonEnergy*1.602176e-19);  <-- this is off by a factor of 10
+	  wavelength_nm = 1239.8/resonantPhotonEnergy;
+	  wavelength_A = 10*wavelength_nm;
+  }
+
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/EbeamL3Energy", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &cassevent.MachineDataEvent().EbeamL3Energy());
   H5Dclose(dataset_id);
-  
-  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/photon_wavelength_A", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
-  double wavelength = cass::PostProcessor::calculateWavelength(cassevent);
-  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &wavelength);
+
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/photon_energy_eV", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &resonantPhotonEnergy);
   H5Dclose(dataset_id);
 
   dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/photon_wavelength_nm", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
-  wavelength /= 10;
-  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &wavelength);
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &wavelength_nm);
   H5Dclose(dataset_id);
 
-  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/photon_energy_ev", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
-  double photon_energy_eV = 1240.7/wavelength;
-  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &photon_energy_eV);
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/photon_wavelength_A", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &wavelength_A);
   H5Dclose(dataset_id);
-
-  const double ebEnergy = cassevent.MachineDataEvent().EbeamL3Energy();
-  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/EbeamL3Energy", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
-  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &ebEnergy);
-  H5Dclose(dataset_id);
-
-  
-  /* Try to write out the pulse length from the epics data*/
-
-  static const char* pvNamePulseDuration = "SIOC:SYS0:ML00:AO820";
-  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/pulse_length", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
-  double pulse_length = cassevent.MachineDataEvent().EpicsData()[pvNamePulseDuration];
-  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &pulse_length);
-  H5Dclose(dataset_id);
-  
-  
+ 
   H5Sclose(dataspace_id);
   
+  
+  // Time in human readable format
   // Strings are a little tricky --> this could be improved!
   char* timestr;
+  setenv("TZ","US/Pacific",1);
   timestr = ctime(&eventTime);
+  unsetenv("TZ");
   dataspace_id = H5Screate(H5S_SCALAR);
   datatype = H5Tcopy(H5T_C_S1);  
   H5Tset_size(datatype,strlen(timestr));
-  dataset_id = H5Dcreate1(hdf_fileID, "LCLS/eventTime", datatype, dataspace_id, H5P_DEFAULT);
+  dataset_id = H5Dcreate1(hdf_fileID, "LCLS/eventTimeString", datatype, dataspace_id, H5P_DEFAULT);
   H5Dwrite(dataset_id, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, timestr );
   H5Dclose(dataset_id);
   H5Sclose(dataspace_id);
+  hdf_error = H5Lcreate_soft( "/LCLS/eventTimeString", hdf_fileID, "/LCLS/eventTime",0,0);
+
   H5Gclose(gid);
   H5Fflush(hdf_fileID,H5F_SCOPE_LOCAL);
   H5Fclose(hdf_fileID); 
@@ -420,7 +442,7 @@ void cass::PostProcessor::appendWavelength(cass::CASSEvent &cassevent){
 	/*
 	 *	Simply return if there are no CCD frames!
 	 */
-  //  int nframes = cassevent.pnCCDEvent().detectors().size();
+  int nframes = cassevent.pnCCDEvent().detectors().size();
   /*  if (nframes == 0) {
     printf("No pnCCD frames in this event:  skipping wavelength append step...\n");
         return;
@@ -457,13 +479,11 @@ void cass::PostProcessor::appendWavelength(cass::CASSEvent &cassevent){
 
 double cass::PostProcessor::calculateWavelength(cass::CASSEvent &cassevent){
   /* 
- 
-     Let's try to calculate the resonant photon energy, without any energy loss corrections.  
-     First try the simple expression in e.g. Ayvazyan, V. et al. (2005). This expression requires
+     Calculate the resonant photon energy (without any energy loss corrections)
+     Use the simple expression in e.g. Ayvazyan, V. et al. (2005). This expression requires
      1) electron energy (in the xtc files)
      2) undulator period (~3cm for LCLS)
      3) undulator K (~3.5 at the LCLS)
-     
   */
   
   const double   ebEnergy = cassevent.MachineDataEvent().EbeamL3Energy();
@@ -474,10 +494,10 @@ double cass::PostProcessor::calculateWavelength(cass::CASSEvent &cassevent){
   const double   lambda = 3.0e7; // LCLS undulator period in nm
   const double   hc = 1239.84172; // in eV*nm
   double gamma = ebEnergy/(0.510998903);  // electron energy in rest mass units (E/mc^2)
-  double resonantPhotonEnergy = hc*2*gamma*gamma/(lambda*(1+K*K/2)); // resonant photon 
-                                         // wavelength in same units as undulator period)
+  double resonantPhotonEnergy = hc*2*gamma*gamma/(lambda*(1+K*K/2)); // resonant photon wavelength in same units as undulator period)
   //  printf("Resonant photon energy, Rick's calculation, no energy loss corrections: %g eV\n",resonantPhotonEnergy);
-  return 1e10*1.98644e-25/(resonantPhotonEnergy*1.602176e-19);
+  //  return 1e10*1.98644e-25/(resonantPhotonEnergy*1.602176e-19);  <-- this is off by a factor of 10
+  return 1239.8/resonantPhotonEnergy;
 }
 
 bool cass::PostProcessor::isGoodImage(cass::CASSEvent &cassevent){
@@ -995,10 +1015,11 @@ namespace cass{
   
   unsigned char * HDRImage::sp_image_get_false_color(int frame,int color, double min, double max){
 
-    int i;
+    int i,x,y;
     double log_of_scale;
     sp_rgb color_table[256];
     double scale,offset,max_v,min_v,value;
+    double phase;
     unsigned char * out = new unsigned char[m_rows[frame]*m_columns[frame]*4];
   
   /*fclose(fp);

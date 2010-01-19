@@ -59,11 +59,11 @@ namespace cass
       void postProcess(CASSEvent&);
       void integrateByQ(CASSEvent&);
       void finishProcessing(){
-	  char outfile[1024];
-	  sprintf(outfile,"%s_integrated.h5",
-		  QFileInfo(cass::globalOptions.lastFile).baseName().toAscii().constData());
+	  //char outfile[1024];
+	  //sprintf(outfile,"%s_integrated.h5",
+		//  QFileInfo(cass::globalOptions.lastFile).baseName().toAscii().constData());
 	  //	  printf("outfile - %s\n",outfile);
-	  integratedImage.outputImage(outfile);
+	  //integratedImage.outputImage(outfile);
       }
       HDRImage integratedImage;
 

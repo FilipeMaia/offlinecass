@@ -27,6 +27,7 @@ public:
     CommandLineOptions()
 	{
 	    outputHitsToFile = false;
+	    verbose = false;
 	    onlyAnalyzeGivenHits = false;
 	    justIntegrateImages = false;
 	    outputAllEvents = true;
@@ -43,6 +44,7 @@ public:
 	    nImagesToAverage = 0;
 	    onlyAppendWavelength = false;
 	}
+	bool verbose;
     bool outputHitsToFile;
     QString hitsOutputFile;
     bool onlyAnalyzeGivenHits;

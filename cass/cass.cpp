@@ -24,6 +24,7 @@ void parseOptions(int argc, char ** argv){
   static char help_text[] = 
     "    Options description:\n\
     \n\
+    -v: verbose (prints out more text)\n\
     -x: Hits output file\n\
     -l: Only analyze hits given on this file\n\
     -s: Only output one single integrated image to this file\n\
@@ -50,6 +51,9 @@ void parseOptions(int argc, char ** argv){
       break;
     }
     switch(c){
+    case 'v':
+	cass::globalOptions.verbose = true;
+	break;
     case 'g':
 	cass::globalOptions.outputAllEvents = false;
 	break;
@@ -236,3 +240,4 @@ int main(int argc, char **argv)
 // c-file-style: "Stroustrup"
 // fill-column: 100
 // End:
+
