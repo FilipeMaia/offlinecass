@@ -32,7 +32,10 @@
 PixEventData::PixEventData
 (void)
 {
-    analysis_flag_     = NOCMMD_NOEVT;
+    /* this flag is ignored */
+    analysis_flag_     = CMMD_EVT;
+    /* this sets the real mode    */
+    //frameAnalysisOp_   = &PixEventData::frameAnlCmmdNoEvt_;
     frameAnalysisOp_   = &PixEventData::frameAnlNoCmmdNoEvt_;
     //frameAnalysisOp_   = &PixEventData::frameAnlCmmdEvt_;
     frame_processed_   = false;
@@ -793,6 +796,99 @@ PixEventData::frameAnlNoCmmdNoEvt_
 //		    signal_value = *pixelval - common_mode - pixelstats->mean;
 		    signal_value = *pixelval
 			- static_cast<pxType>(pixelstats->offset);
+
+// If the signal value is above the threshold, store the pixel
+// signal as an event:
+
+/*
+		    if( signal_value < 0 )
+		    {
+			signal_value = 0;
+		    }
+*/
+
+		    if( signal_value < pix_minval_ )
+		    {
+			pix_minval_ = signal_value;
+		    }
+		    else if( signal_value > pix_maxval_ )
+		    {
+			pix_maxval_ = signal_value;
+		    }
+		    *pix_signal = signal_value;
+		}
+		else {
+		    *pix_signal = EMPTYPIX;
+		}
+	    }
+	}
+    }
+// Return zero, no events were extracted:
+    return 0;
+}
+
+
+int
+PixEventData::frameAnlCmmdNoEvt_
+(shmBfrType* frame, int width, int height, int n_cmodesteps)
+{
+    char          *badflags;
+    int            n_adc;
+    int            pix_x, pix_y;
+    pxType         common_mode, signal_value;
+    pxType        *pixelval, *pix_evtthresh, *pix_signal;
+    staDataType   *pixelstats;
+// Return if the dark frame statistics (calibration) data is
+// not set or if the current frame has already been processed:
+    if( frame_processed_ || !pixstats_set_ ) return -1;
+// Set the event number in the current frame to zero:
+    frame_info_.nEmpty = 0;
+    startEventStorage_();
+// Assign the local pointers to the frame arrays:
+    pixelval      = frame->px;
+    pix_signal    = pixsignal_buffer_;
+    pix_evtthresh = evtthresh_map_;
+    badflags      = badpix_map_;
+    pixelstats    = pix_stat_map_;
+// Set the minima and maxima of the pixel signal map 
+// to their start values:
+    pix_minval_ = pix_maxval_ = 0;
+// Process the window events:
+//    QCoreApplication::processEvents();
+// Decide whether to continue the event analysis:
+    if( stop_processing_ )
+    {
+// Reset the counter for the number of stored raw events:
+	event_info_.rawCount   = 0;
+// Reset the counter for the event number in the current frame:
+	event_info_.frameCount = 0;
+// Set the pointer to the current raw event back to the beginning
+// of the raw event buffer:
+	event_info_.curr_rawevt = event_info_.rawevts;
+// Set the pointer to the current uncorrected event back to the
+// beginning of the storage array for uncorrected events in the
+// current frame:
+	event_info_.current    = event_info_.frame;
+	return 0;
+    }
+// Loop over the lines of the frame:
+    for( pix_y=0; pix_y<frame_height_; pix_y++ ) {
+// Loop over the number of ADC boards:
+	for( n_adc=0; n_adc<number_adcs_; n_adc++ ) {
+// Determine the common mode offset for this line segment:
+	    line_cmodes_[n_adc][pix_y] = common_mode = lineCommonMode_(
+		pixelval,pix_evtthresh,badflags,pixelstats,n_cmodesteps);
+// Loop over all pixels of the line segment:
+	    for( pix_x=0; pix_x<adc_channels_; pix_x++,
+		     pixelval++, pix_signal++, pix_evtthresh++,
+		     badflags++, pixelstats++ ) {
+		if( (!*badflags) && (common_mode>0) ) {
+// Calculate the pixel signal which is the common mode subtracted from
+// the pixel value:
+
+		    signal_value = *pixelval - common_mode - static_cast<pxType>(pixelstats->offset);
+//		    signal_value = *pixelval
+//			- static_cast<pxType>(pixelstats->offset);
 
 // If the signal value is above the threshold, store the pixel
 // signal as an event:

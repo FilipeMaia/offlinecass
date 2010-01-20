@@ -176,10 +176,15 @@ public:
 //
 private:
 // Extract the signal values of the pixels by the subtraction
-// of the offset and the common mode values:
+// of the offset but not the common mode values:
     int frameAnlNoCmmdNoEvt_(shmBfrType* frame,
 			     int width, int height,
 			     int n_cmodesteps);
+// Extract the signal values of the pixels by the subtraction
+// of the offset and the common mode values:
+    int frameAnlCmmdNoEvt_(shmBfrType* frame,
+			 int width, int height, int n_cmodesteps);
+
 // Extract the events above the event threshold from  a data frame:
     int frameAnlCmmdEvt_(shmBfrType* frame,
 			 int width, int height, int n_cmodesteps);
