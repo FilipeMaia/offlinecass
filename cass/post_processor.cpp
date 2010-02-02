@@ -314,26 +314,12 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   H5Dclose(dataset_id);
     
     
-  /* 
-     Calculate the resonant photon energy (without any energy loss corrections)
-     Use the simple expression in e.g. Ayvazyan, V. et al. (2005). This expression requires
-     1) electron energy (in the xtc files)
-     2) undulator period (~3cm for LCLS)
-     3) undulator K (~3.5 at the LCLS)
-  */
-  double wavelength = cass::PostProcessor::calculateWavelength(cassevent);  
-  const double   K = 3.5;  // K of the undulator (provided by Marc Messerschmidt)
-  const double   lambda = 3.0e7; // LCLS undulator period in nm
-  const double   hc = 1239.84172; // in eV*nm
-  double resonantPhotonEnergy = -1; 
+  double resonantPhotonEnergy = cass::PostProcessor::calculatePhotonEnergy(cassevent); 
+  double resonantPhotonEnergyNoEnergyLossCorrection = cass::PostProcessor::calculatePhotonEnergyWithoutLossCorrection(cassevent);
   double wavelength_nm = -1; 
   double wavelength_A = -1;
   
-  const double   ebEnergy = cassevent.MachineDataEvent().EbeamL3Energy();
-  double gamma = ebEnergy/(0.510998903);  // electron energy in rest mass units (E/mc^2)
-  if(ebEnergy){
-	  resonantPhotonEnergy = hc*2*gamma*gamma/(lambda*(1+K*K/2)); // resonant photon wavelength in same units as undulator period)
-	  //  return 1e10*1.98644e-25/(resonantPhotonEnergy*1.602176e-19);  <-- this is off by a factor of 10
+  if(resonantPhotonEnergy){
 	  wavelength_nm = 1239.8/resonantPhotonEnergy;
 	  wavelength_A = 10*wavelength_nm;
   }
@@ -346,12 +332,32 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &resonantPhotonEnergy);
   H5Dclose(dataset_id);
 
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/photon_energy_eV_no_energy_loss_correction", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &resonantPhotonEnergyNoEnergyLossCorrection);
+  H5Dclose(dataset_id);
+
   dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/photon_wavelength_nm", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
   H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &wavelength_nm);
   H5Dclose(dataset_id);
 
   dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/photon_wavelength_A", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
   H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &wavelength_A);
+  H5Dclose(dataset_id);
+
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/EbeamLTUPosX", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &cassevent.MachineDataEvent().EbeamLTUPosX());
+  H5Dclose(dataset_id);
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/EbeamLTUPosY", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &cassevent.MachineDataEvent().EbeamLTUPosY());
+  H5Dclose(dataset_id);
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/EbeamLTUAngX", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &cassevent.MachineDataEvent().EbeamLTUAngX());
+  H5Dclose(dataset_id);
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/EbeamLTUAngY", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &cassevent.MachineDataEvent().EbeamLTUAngY());
+  H5Dclose(dataset_id);
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/EbeamPkCurrBC2", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
+  H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &cassevent.MachineDataEvent().EbeamPkCurrBC2());
   H5Dclose(dataset_id);
  
   H5Sclose(dataspace_id);
@@ -477,7 +483,7 @@ void cass::PostProcessor::appendWavelength(cass::CASSEvent &cassevent){
 }
 
 
-double cass::PostProcessor::calculateWavelength(cass::CASSEvent &cassevent){
+double cass::PostProcessor::calculatePhotonEnergyWithoutLossCorrection(cass::CASSEvent &cassevent){
   /* 
      Calculate the resonant photon energy (without any energy loss corrections)
      Use the simple expression in e.g. Ayvazyan, V. et al. (2005). This expression requires
@@ -497,7 +503,7 @@ double cass::PostProcessor::calculateWavelength(cass::CASSEvent &cassevent){
   double resonantPhotonEnergy = hc*2*gamma*gamma/(lambda*(1+K*K/2)); // resonant photon wavelength in same units as undulator period)
   //  printf("Resonant photon energy, Rick's calculation, no energy loss corrections: %g eV\n",resonantPhotonEnergy);
   //  return 1e10*1.98644e-25/(resonantPhotonEnergy*1.602176e-19);  <-- this is off by a factor of 10
-  return 1239.8/resonantPhotonEnergy;
+  return resonantPhotonEnergy;
 }
 
 bool cass::PostProcessor::isGoodImage(cass::CASSEvent &cassevent){
@@ -1061,4 +1067,54 @@ namespace cass{
 }
 
 
+/* 
+   Returns the photon energy in eV. 
+   It uses Rick K. code at psexport:/reg/neh/home/rkirian/ana2 
+*/
+double cass::PostProcessor::calculatePhotonEnergy(cass::CASSEvent &cassevent){
+  /*
+   * Get electron beam parameters from beamline data
+   */     
 
+  double fEbeamCharge = cassevent.MachineDataEvent().EbeamCharge();    // in nC
+  double fEbeamL3Energy = cassevent.MachineDataEvent().EbeamL3Energy();  // in MeV 
+  double fEbeamPkCurrBC2 = cassevent.MachineDataEvent().EbeamPkCurrBC2(); // in Amps
+
+  /*
+   * calculate the resonant photon energy
+   */
+
+  // Get the present peak current in Amps
+  double peakCurrent = fEbeamPkCurrBC2;
+  
+  // Get present beam energy [GeV]
+  double DL2energyGeV = 0.001*fEbeamL3Energy;
+
+  // wakeloss prior to undulators
+  double LTUwakeLoss = 0.0016293*peakCurrent;
+
+  // Spontaneous radiation loss per segment
+  double SRlossPerSegment = 0.63*DL2energyGeV;
+
+  // wakeloss in an undulator segment
+  double wakeLossPerSegment = 0.0003*peakCurrent;
+
+  // energy loss per segment
+  double energyLossPerSegment = SRlossPerSegment + wakeLossPerSegment;
+
+  // energy in first active undulator segment [GeV]
+  double energyProfile = DL2energyGeV - 0.001*LTUwakeLoss - 0.0005*energyLossPerSegment;
+
+  // Calculate the resonant photon energy of the first active segment
+  double photonEnergyeV = 44.42*energyProfile*energyProfile;
+
+  return photonEnergyeV;
+}
+
+double cass::PostProcessor::calculateWavelength(cass::CASSEvent &cassevent){
+  double E = calculatePhotonEnergy(cassevent);
+  if(E){
+    return 1398.8/E;
+  }
+  return -1;
+}

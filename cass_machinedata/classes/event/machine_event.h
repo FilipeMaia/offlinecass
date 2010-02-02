@@ -74,6 +74,9 @@ namespace cass
             double EbeamLTUAngY()const {return _EbeamLTUAngY;}
             double& EbeamLTUAngY()     {return _EbeamLTUAngY;}
 
+            double EbeamPkCurrBC2()const {return _EbeamPkCurrBC2;}
+            double& EbeamPkCurrBC2()     {return _EbeamPkCurrBC2;}
+
             double FitTime1()const     {return _FitTime1;}
             double& FitTime1()         {return _FitTime1;}
 
@@ -103,6 +106,7 @@ namespace cass
             double _EbeamLTUPosY;   // in mm
             double _EbeamLTUAngX;   // in mrad
             double _EbeamLTUAngY;   // in mrad
+	    double _EbeamPkCurrBC2; // in Amps
 
             double _FitTime1;       //cavity property in pico-seconds
             double _FitTime2;       //cavity property in pico-seconds

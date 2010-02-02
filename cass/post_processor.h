@@ -56,6 +56,8 @@ namespace cass
 
     public:
 	static double calculateWavelength(cass::CASSEvent &cassevent);
+	static double calculatePhotonEnergyWithoutLossCorrection(cass::CASSEvent &cassevent);
+	static double calculatePhotonEnergy(cass::CASSEvent &cassevent);
       void postProcess(CASSEvent&);
       void integrateByQ(CASSEvent&);
       void finishProcessing(){
