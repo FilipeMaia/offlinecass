@@ -57,7 +57,7 @@ void postProcess_printinfo(cass::CASSEvent &cassevent) {
 
 	// This information is always printed 
 		printf("Time = %s", ctime(&eventTime));
-		printf("casseventID = 0x%lX, fiducial = %i\n", cassevent.id(), eventFiducial);
+		printf("casseventID = 0x%llX, fiducial = %i\n",(unsigned long long)cassevent.id(), eventFiducial);
 		//printf("energy = %f\tEbeam charge = %f\n",cassevent.MachineDataEvent().energy(), cassevent.MachineDataEvent().EbeamCharge());
  
  
@@ -108,6 +108,7 @@ int16_t postProcess_filter(cass::CASSEvent &) {
  *	export current pnCCD frames to HDF5 file
  */
 void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
+  static QString xtcfile = QString("Unkown");
 
 	/*
 	 *	Simply return if there are no CCD frames!
@@ -123,7 +124,15 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
    *	Create filename based on date, time and LCLS fiducial for this image
    */
   char outfile[1024];
-  char buffer[1024];
+  char buffer1[1024];
+  char buffer2[1024];
+  //  char buffer3[1024];
+  /* Check if we get a valid filename. Otherwise just use previous filename */
+  if(cassevent.filename() && cassevent.filename()[0] != 0){
+    xtcfile =  QFileInfo(cassevent.filename()).baseName();
+  }
+  /*  const char* xtcfile = QFileInfo(cassevent.filename()).baseName().toAscii().constData();*/
+  printf("xtcfile = %s\n",xtcfile.toAscii().constData());
   Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent.datagrambuffer());
   time_t eventTime = datagram->seq.clock().seconds();
   // time_t eventTimeNs = datagram->seq.clock().nanoseconds();
@@ -131,8 +140,14 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   setenv("TZ","US/Pacific",1);
   struct tm *timeinfo=localtime( &eventTime );
   unsetenv("TZ");
-  strftime(buffer,80,"LCLS_%Y_%b%d_%H%M%S",timeinfo);
-  sprintf(outfile,"%s_%i_pnCCD.h5",buffer,eventFiducial);
+  strftime(buffer1,80,"%Y_%b%d",timeinfo);
+  strftime(buffer2,80,"%H%M%S",timeinfo);
+  //strncpy(buffer3, strpbrk(xtcfile,"-")+1,5); 
+  //printf("%s \n",xtcfile);
+  //printf(outfile,"%s\n",cassevent.filename());
+
+
+  sprintf(outfile,"LCLS_%s_%s_%i_pnCCD.h5",buffer1,buffer2,eventFiducial);
   //if(QFile::exists(outfile)){
   // sprintf(outfile,"%s_%i_pnCCD-part2.h5",buffer,eventFiducial);
   //}
@@ -371,12 +386,25 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   unsetenv("TZ");
   dataspace_id = H5Screate(H5S_SCALAR);
   datatype = H5Tcopy(H5T_C_S1);  
-  H5Tset_size(datatype,strlen(timestr));
+  H5Tset_size(datatype,strlen(timestr)+1);
   dataset_id = H5Dcreate1(hdf_fileID, "LCLS/eventTimeString", datatype, dataspace_id, H5P_DEFAULT);
   H5Dwrite(dataset_id, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, timestr );
   H5Dclose(dataset_id);
   H5Sclose(dataspace_id);
   hdf_error = H5Lcreate_soft( "/LCLS/eventTimeString", hdf_fileID, "/LCLS/eventTime",0,0);
+
+
+  // Put the XTC filename somewhere
+  dataspace_id = H5Screate(H5S_SCALAR);
+  datatype = H5Tcopy(H5T_C_S1);  
+  printf("xtcfile = %s\n",xtcfile.toAscii().constData());
+  H5Tset_size(datatype,xtcfile.length()+1);
+  dataset_id = H5Dcreate1(hdf_fileID, "LCLS/xtcFilename", datatype, dataspace_id, H5P_DEFAULT);
+  H5Dwrite(dataset_id, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, xtcfile.toAscii().constData() );
+  H5Dclose(dataset_id);
+  H5Sclose(dataspace_id);
+
+
 
   H5Gclose(gid);
   H5Fflush(hdf_fileID,H5F_SCOPE_LOCAL);
@@ -448,7 +476,7 @@ void cass::PostProcessor::appendWavelength(cass::CASSEvent &cassevent){
 	/*
 	 *	Simply return if there are no CCD frames!
 	 */
-  int nframes = cassevent.pnCCDEvent().detectors().size();
+  //int nframes = cassevent.pnCCDEvent().detectors().size();
   /*  if (nframes == 0) {
     printf("No pnCCD frames in this event:  skipping wavelength append step...\n");
         return;
@@ -1021,11 +1049,12 @@ namespace cass{
   
   unsigned char * HDRImage::sp_image_get_false_color(int frame,int color, double min, double max){
 
-    int i,x,y;
+    int i;
+    //int x,y;
     double log_of_scale;
     sp_rgb color_table[256];
     double scale,offset,max_v,min_v,value;
-    double phase;
+    //double phase;
     unsigned char * out = new unsigned char[m_rows[frame]*m_columns[frame]*4];
   
   /*fclose(fp);
@@ -1076,7 +1105,7 @@ double cass::PostProcessor::calculatePhotonEnergy(cass::CASSEvent &cassevent){
    * Get electron beam parameters from beamline data
    */     
 
-  double fEbeamCharge = cassevent.MachineDataEvent().EbeamCharge();    // in nC
+  //double fEbeamCharge = cassevent.MachineDataEvent().EbeamCharge();    // in nC
   double fEbeamL3Energy = cassevent.MachineDataEvent().EbeamL3Energy();  // in MeV 
   double fEbeamPkCurrBC2 = cassevent.MachineDataEvent().EbeamPkCurrBC2(); // in Amps
 
