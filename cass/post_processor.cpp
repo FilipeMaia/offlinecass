@@ -108,7 +108,7 @@ int16_t postProcess_filter(cass::CASSEvent &) {
  *	export current pnCCD frames to HDF5 file
  */
 void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
-  static QString xtcfile = QString("Unkown");
+  static QString xtcfile = QString("exx-rxxxx");
 
 	/*
 	 *	Simply return if there are no CCD frames!
@@ -124,14 +124,13 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
    *	Create filename based on date, time and LCLS fiducial for this image
    */
   char outfile[1024];
-  char buffer1[1024];
-  char buffer2[1024];
-  //  char buffer3[1024];
+  char buffer1[80];
+  char buffer2[80];
+  char buffer3[80];
   /* Check if we get a valid filename. Otherwise just use previous filename */
   if(cassevent.filename() && cassevent.filename()[0] != 0){
     xtcfile =  QFileInfo(cassevent.filename()).baseName();
   }
-  /*  const char* xtcfile = QFileInfo(cassevent.filename()).baseName().toAscii().constData();*/
   printf("xtcfile = %s\n",xtcfile.toAscii().constData());
   Pds::Dgram *datagram = reinterpret_cast<Pds::Dgram*>(cassevent.datagrambuffer());
   time_t eventTime = datagram->seq.clock().seconds();
@@ -142,15 +141,9 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   unsetenv("TZ");
   strftime(buffer1,80,"%Y_%b%d",timeinfo);
   strftime(buffer2,80,"%H%M%S",timeinfo);
+  strncpy(buffer3, xtcfile.toAscii().constData()+4,5); 
   //strncpy(buffer3, strpbrk(xtcfile,"-")+1,5); 
-  //printf("%s \n",xtcfile);
-  //printf(outfile,"%s\n",cassevent.filename());
-
-
-  sprintf(outfile,"LCLS_%s_%s_%i_pnCCD.h5",buffer1,buffer2,eventFiducial);
-  //if(QFile::exists(outfile)){
-  // sprintf(outfile,"%s_%i_pnCCD-part2.h5",buffer,eventFiducial);
-  //}
+  sprintf(outfile,"LCLS_%s_%s_%s_%i_pnCCD.h5",buffer1,buffer3,buffer2,eventFiducial);
   printf("Writing data to: %s\n",outfile);
   
   
@@ -304,6 +297,10 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/fiducial", H5T_NATIVE_INT32, dataspace_id, H5P_DEFAULT);
   H5Dwrite(dataset_id, H5T_NATIVE_INT32, H5S_ALL, H5S_ALL, H5P_DEFAULT, &eventFiducial );
   H5Dclose(dataset_id);
+
+  dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/casseventID", H5T_NATIVE_UINT64, dataspace_id, H5P_DEFAULT);
+  H5Dwrite(dataset_id, H5T_NATIVE_UINT64, H5S_ALL, H5S_ALL, H5P_DEFAULT, &cassevent.id() );
+  H5Dclose(dataset_id);
   
   dataset_id = H5Dcreate1(hdf_fileID, "/LCLS/energy", H5T_NATIVE_DOUBLE, dataspace_id, H5P_DEFAULT);
   H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &cassevent.MachineDataEvent().energy() );
@@ -397,7 +394,7 @@ void postProcess_writeHDF5(cass::CASSEvent &cassevent) {
   // Put the XTC filename somewhere
   dataspace_id = H5Screate(H5S_SCALAR);
   datatype = H5Tcopy(H5T_C_S1);  
-  printf("xtcfile = %s\n",xtcfile.toAscii().constData());
+  //printf("xtcfile = %s\n",xtcfile.toAscii().constData());
   H5Tset_size(datatype,xtcfile.length()+1);
   dataset_id = H5Dcreate1(hdf_fileID, "LCLS/xtcFilename", datatype, dataspace_id, H5P_DEFAULT);
   H5Dwrite(dataset_id, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, xtcfile.toAscii().constData() );
